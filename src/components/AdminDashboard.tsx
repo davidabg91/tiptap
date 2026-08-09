@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { getWaiters, getReviews, getOrders, getSubscription, addWaiter, updateWaiter, deleteWaiter, type Waiter, type Review } from '../utils/mockData';
 import { 
   CustomUsers as Users, 
@@ -43,6 +43,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
 
   const [activeTab, setActiveTab] = useState<'analytics' | 'waiters' | 'reviews' | 'payouts' | 'google' | 'orders'>('analytics');
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | 'year'>('30d');
+
+  // On mobile the menu sits above the content; after picking a tab we scroll
+  // the workspace into view so the user actually sees the panel change.
+  const workspaceRef = useRef<HTMLElement>(null);
+  const handleTabSelect = (id: typeof activeTab) => {
+    setActiveTab(id);
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      setTimeout(() => {
+        workspaceRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
+    }
+  };
   
   // Waiter Sorting & Filtering State
   const [waiterSortBy, setWaiterSortBy] = useState<'rating' | 'tips' | 'scans' | 'reviews'>('rating');
@@ -236,7 +248,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
           ].map(item => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id as any)}
+              onClick={() => handleTabSelect(item.id as any)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -286,7 +298,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
           ].map(item => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id as any)}
+              onClick={() => handleTabSelect(item.id as any)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -336,7 +348,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
       </aside>
 
       {/* RIGHT MAIN WORKSPACE */}
-      <main style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', width: '100%' }}>
+      <main ref={workspaceRef} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', width: '100%', scrollMarginTop: '70px' }}>
         
         {/* INTERACTIVE DEMO BANNER FOR MANAGERS */}
         <div style={{

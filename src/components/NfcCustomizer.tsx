@@ -118,10 +118,10 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
         <div className="mobile-stack" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', minHeight: '520px' }}>
         
         {/* LEFT COLUMN: 3D Visualization Area */}
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
+        <div className="customizer-preview" style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
           justifyContent: 'center',
           background: 'rgba(255,255,255,0.01)',
           border: '1px solid var(--border-light)',

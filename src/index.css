@@ -1279,6 +1279,29 @@ select option:checked {
     width: 30px !important;
     height: 30px !important;
   }
+
+  /* ---- NFC Customizer: pin the 3D preview so every change to the
+     card / stand / colour is visible while scrolling the options.
+     The preview and the form share the same grid container, so a
+     sticky grid item can stay pinned while the form scrolls. ---- */
+  .customizer-preview {
+    position: sticky !important;
+    top: 64px;
+    z-index: 5;
+    min-height: 0 !important;
+    max-height: 44vh;
+    padding: 1rem !important;
+    /* opaque so the scrolling form underneath is not visible through it */
+    background: #100f22 !important;
+    box-shadow: 0 16px 26px rgba(0, 0, 0, 0.55);
+  }
+  /* scale the 3D scenes down so they fit the compact sticky preview */
+  .customizer-preview .stand-scene {
+    transform: scale(0.6);
+  }
+  .customizer-preview .card-scene {
+    transform: scale(0.78);
+  }
 }
 
 /* ---------- SMALL PHONES (<= 480px) ---------- */
