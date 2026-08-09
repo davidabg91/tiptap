@@ -28,6 +28,8 @@
   --font-display: 'Outfit', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
   --font-official: 'Playfair Display', Georgia, serif;
+  --font-brand: 'Unbounded', 'Outfit', sans-serif;
+  --font-nav: 'Geologica', 'Plus Jakarta Sans', sans-serif;
   
   --radius-sm: 8px;
   --radius-md: 16px;
@@ -689,10 +691,10 @@ select option:checked {
 .nav-pill-item {
   color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
-  font-family: var(--font-display);
-  font-size: 0.88rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-family: var(--font-nav);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   padding: 0.45rem 1rem;
   border-radius: var(--radius-full);
   transition: color 0.2s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
@@ -724,10 +726,11 @@ select option:checked {
 
 /* SUPER AWESOME AUTH BUTTON */
 .nav-super-cool-auth-btn {
-  font-family: var(--font-display);
-  font-size: 0.86rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-family: var(--font-nav);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   padding: 0.5rem 1.25rem;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%);

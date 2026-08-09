@@ -98,12 +98,19 @@ function App() {
           >
             <TipTapBrandSymbol size={32} />
             <span style={{ 
-              fontFamily: 'var(--font-display)', 
-              fontSize: '1.35rem', 
-              fontWeight: 900, 
-              letterSpacing: '-0.5px' 
+              fontFamily: 'var(--font-brand)', 
+              fontSize: '1.18rem', 
+              fontWeight: 800, 
+              letterSpacing: '-0.5px',
+              background: 'linear-gradient(135deg, #ffffff 0%, #c4b5fd 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
             }}>
-              Tip<span style={{ color: 'var(--accent-purple)' }}>Tap</span>
+              Tip<span style={{ 
+                background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}>Tap</span>
             </span>
           </div>
 
