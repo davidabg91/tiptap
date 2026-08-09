@@ -298,7 +298,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
           </div>
 
           {/* 2-Column Dashboard Layout */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3rem', alignItems: 'center', position: 'relative', zIndex: 2 }}>
+          <div className="mobile-stack" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3rem', alignItems: 'center', position: 'relative', zIndex: 2 }}>
             
             {/* Left Column: Sliders */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>

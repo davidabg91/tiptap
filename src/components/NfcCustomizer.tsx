@@ -121,7 +121,7 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
           Използвайте нашия интерактивен 3D симулатор, за да проектирате своите карти и табели. Ние ще ги брандираме с Вашето лого и текст.
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', minHeight: '520px' }}>
+        <div className="mobile-stack" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', minHeight: '520px' }}>
         
         {/* LEFT COLUMN: 3D Visualization Area */}
         <div style={{ 

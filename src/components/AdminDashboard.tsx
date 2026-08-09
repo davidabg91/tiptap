@@ -180,7 +180,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
     });
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem', width: '100%', maxWidth: '1440px', margin: '0 auto', alignItems: 'start' }}>
+    <div className="mobile-stack" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem', width: '100%', maxWidth: '1440px', margin: '0 auto', alignItems: 'start' }}>
       
       {/* LEFT EXECUTIVE SIDEBAR */}
       <aside className="glass-panel" style={{ 
@@ -525,7 +525,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
         {/* TAB 1: ANALYTICS & TRENDS */}
         {activeTab === 'analytics' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '1.5rem' }}>
+            <div className="mobile-stack" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '1.5rem' }}>
               {/* TIPS TREND CHART */}
               <div className="glass-panel" style={{ padding: '1.75rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
@@ -539,7 +539,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
                 </div>
 
                 {/* SVG Bar Chart */}
-                <div style={{ width: '100%', height: '220px', display: 'flex', alignItems: 'flex-end', gap: '1rem', padding: '1rem 0 0.5rem', borderBottom: '1px solid var(--border-light)' }}>
+                <div className="dash-bar-chart" style={{ width: '100%', height: '220px', display: 'flex', alignItems: 'flex-end', gap: '1rem', padding: '1rem 0 0.5rem', borderBottom: '1px solid var(--border-light)' }}>
                   {[
                     { day: 'Пон', val: 45, tips: '€45.00' },
                     { day: 'Втор', val: 60, tips: '€60.00' },
@@ -919,7 +919,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
         {/* TAB 4: PAYOUTS & TIP POOL */}
         {activeTab === 'payouts' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div className="mobile-stack" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div className="glass-panel" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0 }}>Автоматични Изплащания (IBAN)</h3>
                 <div>

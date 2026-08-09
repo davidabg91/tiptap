@@ -54,13 +54,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           </p>
 
           {/* Billing Switcher */}
-          <div style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: '0.5rem', 
-            background: 'rgba(255,255,255,0.04)', 
+          <div className="pricing-billing-switch" style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'rgba(255,255,255,0.04)',
             border: '1.5px solid var(--border-light)',
-            padding: '0.35rem', 
+            padding: '0.35rem',
             borderRadius: '99px'
           }}>
             <button

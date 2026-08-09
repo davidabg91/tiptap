@@ -67,15 +67,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       
       {/* SECTION 1: HERO SECTION (TONE 1: MIDNIGHT TITANIUM) */}
       <section className="section-alt-dark hero-grid-pattern" style={{ padding: '4rem 4vw 5rem' }}>
-        <div style={{ 
-          position: 'relative', 
+        <div className="mobile-stack" style={{
+          position: 'relative',
           maxWidth: '1400px',
           margin: '0 auto',
           width: '100%',
-          display: 'grid', 
-          gridTemplateColumns: '1.2fr 0.8fr', 
-          gap: '4vw', 
-          alignItems: 'center' 
+          display: 'grid',
+          gridTemplateColumns: '1.2fr 0.8fr',
+          gap: '4vw',
+          alignItems: 'center'
         }}>
           
           {/* Glow Effects */}
@@ -432,7 +432,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* SECTION 3: INTERACTIVE ROI & REVENUE CALCULATOR (FUTURISTIC HOLOGRAPHIC GLASS) */}
       <section className="section-alt-dark">
         <div style={{ padding: '0 4vw', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
-          <div className="glass-panel" style={{ padding: '3.5rem 3.5vw', borderRadius: '32px', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3.5vw', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div className="glass-panel mobile-stack" style={{ padding: '3.5rem 3.5vw', borderRadius: '32px', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3.5vw', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
             
             {/* Ambient Backlight Orbs */}
             <div className="bg-glow-purple" style={{ top: '-20%', right: '-10%', opacity: 0.4 }}></div>
@@ -470,7 +470,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </div>
                 <span style={{ letterSpacing: '0.75px' }}>ИНТЕРАКТИВЕН КАЛКУЛАТОР ЗА РЕСТОРАНТИ</span>
               </div>
-              <h2 style={{ fontSize: '2.5rem', margin: '0 0 1rem', lineHeight: 1.18 }} className="hero-display-title" style={{ textAlign: 'left', margin: '0 0 1rem' }}>
+              <h2 style={{
+                fontFamily: 'var(--font-official)',
+                fontSize: '1.85rem',
+                fontWeight: 700,
+                lineHeight: 1.25,
+                letterSpacing: '-0.01em',
+                textAlign: 'left',
+                margin: '0 0 1rem',
+                background: 'linear-gradient(135deg, #ffffff 0%, #e2e8f0 55%, #c084fc 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}>
                 Изчислете допълнителните приходи &amp; отзиви
               </h2>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '2.2rem', fontSize: '1.05rem' }}>
@@ -576,7 +587,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* SECTION 4: HARDWARE & CARD PREVIEW SECTION (TONE 2: RICH OBSIDIAN INDIGO) */}
       <section className="section-alt-indigo">
         <div style={{ padding: '0 4vw', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
-          <div className="glass-panel" style={{ padding: '3.5rem 3vw', borderRadius: '32px', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '4vw', alignItems: 'center' }}>
+          <div className="glass-panel mobile-stack" style={{ padding: '3.5rem 3vw', borderRadius: '32px', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '4vw', alignItems: 'center' }}>
             <div>
               <span style={{ color: 'var(--accent-purple)', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Брандирани Продукти с Високо Качество</span>
               <h2 style={{ fontSize: '2.4rem', margin: '0.75rem 0 1rem', lineHeight: 1.2 }}>
@@ -591,7 +602,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             {/* 3D INTERACTIVE CARD SHOWCASE */}
-            <div 
+            <div
+              className="card-showcase-3d"
               style={{ display: 'flex', justifyContent: 'center', perspective: '1000px', cursor: 'grab' }}
               onMouseMove={handleCardMouseMove}
               onMouseLeave={handleCardMouseLeave}

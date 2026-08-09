@@ -1103,3 +1103,162 @@ select option:checked {
   cursor: pointer;
 }
 
+/* ============================================================
+   RESPONSIVE / MOBILE OPTIMIZATION
+   Desktop layout is untouched; all rules live inside media
+   queries. `!important` is used deliberately to override inline
+   React styles (inline styles otherwise win over stylesheets).
+   ============================================================ */
+
+/* Generic helper: any element carrying `mobile-stack` collapses
+   its inline multi-column grid to a single column on small screens. */
+
+/* ---------- TABLETS & SMALL LAPTOPS (<= 1024px) ---------- */
+@media (max-width: 1024px) {
+  .floating-island-navbar {
+    padding: 0.4rem 0.75rem;
+  }
+  .nav-pill-item {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.78rem;
+  }
+}
+
+/* ---------- MOBILE / PORTRAIT TABLET (<= 768px) ---------- */
+@media (max-width: 768px) {
+  /* ---- Navigation bar: switch to hamburger ---- */
+  .navbar-wrapper {
+    top: 0.5rem;
+    padding: 0 3vw;
+  }
+  .floating-island-navbar {
+    padding: 0.4rem 0.5rem 0.4rem 1rem;
+    border-radius: 20px;
+    gap: 0.25rem;
+  }
+  .desktop-nav {
+    display: none !important;
+  }
+  .floating-island-navbar .nav-super-cool-auth-btn,
+  .floating-island-navbar .ios-glass-btn-primary {
+    display: none !important;
+  }
+  .mobile-menu-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+  }
+
+  /* ---- Collapse any marked two-column layout ----
+     minmax(0, 1fr) (not 1fr) lets the single track shrink below its
+     content's intrinsic size, preventing grid blowout / h-scroll. */
+  .mobile-stack {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 2rem !important;
+  }
+  .mobile-stack > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* ---- Reduce vertical section padding (keep horizontal 4vw) ---- */
+  .section-alt-dark,
+  .section-alt-indigo {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  /* ---- Clip decorative glow orbs so they never create h-scroll.
+     overflow: clip (not hidden) never becomes a scroll container,
+     so it can't interfere with the sticky navbar. ---- */
+  section,
+  .section-alt-dark,
+  .section-alt-indigo,
+  .glass-panel {
+    overflow-x: clip;
+  }
+  .bg-glow-purple,
+  .bg-glow-cyan {
+    width: 260px !important;
+    height: 260px !important;
+  }
+
+  /* ---- Hero: center order, smaller gap ---- */
+  .hero-display-title {
+    font-size: clamp(2rem, 8vw, 2.6rem);
+  }
+
+  /* ---- Smartphone frame: scale to fit ---- */
+  .titanium-phone-frame {
+    width: 300px;
+    height: 590px;
+  }
+  /* The sweeping NFC-card animation travels far off-screen (±420px in
+     its keyframes) — clipped and broken-looking on narrow phones.
+     Hide the decorative overlay; the interactive phone demo stays. */
+  .nfc-scan-stage {
+    display: none !important;
+  }
+
+  /* ---- 3D card showcase (hardware section) scale down ---- */
+  .card-showcase-3d {
+    transform: scale(0.82);
+  }
+
+  /* ---- Acrylic table stand scale ---- */
+  .acrylic-3d-stand-container {
+    transform: scale(0.9);
+  }
+
+  /* ---- Legal / long tables scroll horizontally instead of overflowing ---- */
+  .legal-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ---- Modals: breathing room from screen edges ---- */
+  .modal-overlay {
+    padding: 1rem !important;
+  }
+
+  /* ---- Pricing billing switch: wrap instead of overflow ---- */
+  .pricing-billing-switch {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+  }
+
+  /* ---- Dashboard bar chart: tighten and drop per-bar money labels
+     (they force each flex bar wide enough to overflow) ---- */
+  .dash-bar-chart {
+    gap: 0.4rem !important;
+  }
+  .dash-bar-chart > div {
+    min-width: 0 !important;
+  }
+  .dash-bar-chart > div > span:first-child {
+    display: none;
+  }
+}
+
+/* ---------- SMALL PHONES (<= 480px) ---------- */
+@media (max-width: 480px) {
+  .titanium-phone-frame {
+    width: 270px;
+    height: 540px;
+  }
+  .hero-display-title {
+    font-size: clamp(1.75rem, 8.5vw, 2.2rem);
+  }
+  /* Tighten oversized inline headings so they never clip */
+  h1, h2 {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .floating-island-navbar {
+    padding: 0.35rem 0.4rem 0.35rem 0.75rem;
+  }
+}
+
