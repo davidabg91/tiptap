@@ -86,7 +86,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             
             <h1 className="hero-display-title">
               Вижте в реално време как <br />
-              <span className="text-gradient-platinum">работи вашият персонал.</span>
+              работи вашият персонал.
             </h1>
 
             <p className="font-casual-friendly" style={{ maxWidth: '680px', margin: '0 auto' }}>
@@ -276,7 +276,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           
           <div style={{ textAlign: 'center', maxWidth: '650px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h2 className="hero-display-title" style={{ fontSize: '2.5rem', margin: '0 0 0.5rem', textAlign: 'center' }}>
-              Как Работи <span className="text-gradient-platinum">Платформата?</span>
+              Как Работи Платформата?
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6 }}>
               Интеграцията става за броени минути, а резултатите започват веднага.
@@ -416,9 +416,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 letterSpacing: '-0.01em',
                 textAlign: 'left',
                 margin: '0 0 1rem',
-                background: 'linear-gradient(135deg, #ffffff 0%, #e2e8f0 55%, #c084fc 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: '#ffffff',
               }}>
                 Изчислете допълнителните приходи &amp; отзиви
               </h2>
