@@ -96,26 +96,20 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
 
   return (
     <div className="nfc-customizer-container" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2.5rem' }}>
-      <h2 style={{ 
-          fontSize: '2.35rem', 
-          fontWeight: 900,
-          fontFamily: 'var(--font-display)',
-          letterSpacing: '-0.02em',
-          marginBottom: '0.5rem', 
-          display: 'flex', 
-          alignItems: 'center', 
+      <h2 style={{
+          fontFamily: 'var(--font-official)',
+          fontSize: '2.1rem',
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
+          marginBottom: '0.5rem',
+          display: 'flex',
+          alignItems: 'center',
           gap: '0.75rem',
-          lineHeight: 1.2
+          lineHeight: 1.25,
+          color: '#ffffff'
         }}>
-          <Layers className="text-gradient-purple" size={32} />
-          <span style={{ 
-            background: 'linear-gradient(135deg, #ffffff 0%, #fbbf24 40%, #e2e8f0 100%)', 
-            WebkitBackgroundClip: 'text', 
-            WebkitTextFillColor: 'transparent',
-            filter: 'drop-shadow(0 2px 8px rgba(245, 158, 11, 0.2))'
-          }}>
-            Персонализирайте Вашите NFC Продукти
-          </span>
+          <Layers color="#a78bfa" size={30} />
+          <span>Персонализирайте Вашите NFC Продукти</span>
         </h2>
         <p style={{ color: 'var(--text-secondary)', marginTop: '-1.5rem' }}>
           Използвайте нашия интерактивен 3D симулатор, за да проектирате своите карти и табели. Ние ще ги брандираме с Вашето лого и текст.

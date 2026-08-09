@@ -14,8 +14,9 @@ import {
   CustomMessageSquare as MessageSquare
 } from './CustomIcons';
 import { 
-  IconCyberAnalytics, IconVipWaiters, IconEuroChip, IconSmartRadar, 
-  IconCyberQr, IconPrismStar, IconNfcChip 
+  IconCyberAnalytics, IconVipWaiters, IconEuroChip, IconSmartRadar,
+  IconCyberQr, IconPrismStar, IconNfcChip,
+  IconHandNfcCard, IconHandTableStand
 } from './CustomIcons';
 import { RemotionFeatureShowcase } from './RemotionFeatureShowcase';
 import { ModernFeatureGrid } from './ModernFeatureGrid';
@@ -95,8 +96,8 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
           
           {/* Card Option A: Bill Holder Card */}
           <div className="glow-border-card" style={{ padding: '2.2rem', background: 'rgba(14, 14, 26, 0.9)', borderRadius: '24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem' }}>
-              <span style={{ fontSize: '1.6rem' }}>💳</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1rem' }}>
+              <IconHandNfcCard size={34} color="#a78bfa" />
               <h3 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0, color: '#fff' }}>
                 Вариант 1: С NFC Карта в Сметкодържача
               </h3>
@@ -113,8 +114,8 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
 
           {/* Card Option B: Table Stand */}
           <div className="glow-border-card" style={{ padding: '2.2rem', background: 'rgba(14, 14, 26, 0.9)', borderRadius: '24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem' }}>
-              <span style={{ fontSize: '1.6rem' }}>📌</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1rem' }}>
+              <IconHandTableStand size={34} color="#a78bfa" />
               <h3 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0, color: '#fff' }}>
                 Вариант 2: С Настолна Табелка на Масата
               </h3>

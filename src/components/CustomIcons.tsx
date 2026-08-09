@@ -704,3 +704,34 @@ export const IconHandTipCard: React.FC<IconProps> = ({ size = 24, color = '#a78b
     <path d="M12 15.6C11.9 15.6 11.8 15.5 11.7 15.4C10.7 14.5 9.9 13.8 9.4 13.1C9 12.6 8.9 12 9.1 11.5C9.4 10.8 10.2 10.5 10.9 10.8C11.3 11 11.7 11.3 12 11.7C12.3 11.3 12.7 11 13.1 10.8C13.8 10.5 14.6 10.8 14.9 11.5C15.1 12 15 12.6 14.6 13.1C14.1 13.8 13.3 14.5 12.3 15.4C12.2 15.5 12.1 15.6 12 15.6Z" stroke={color} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+
+// 34. HAND-DRAWN NFC CARD WITH CONTACTLESS WAVES (bill-holder card, purple)
+export const IconHandNfcCard: React.FC<IconProps> = ({ size = 24, color = '#a78bfa', className, style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
+    {/* sketchy card body */}
+    <path d="M2.7 6.9C6.5 6.6 12.9 6.5 16.3 6.8C16.6 9.5 16.6 13.5 16.3 16.1C12.8 16.4 6.5 16.3 2.7 16C2.4 13.4 2.4 9.5 2.7 6.9Z" stroke={color} strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+    {/* magnetic stripe */}
+    <path d="M2.9 9.5C6.3 9.7 12.7 9.7 16.1 9.5" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
+    {/* hand-drawn chip */}
+    <path d="M5 12.2C6 12.1 7.4 12.1 8.4 12.2C8.5 12.9 8.5 13.6 8.4 14.3C7.4 14.4 6 14.4 5 14.3C4.9 13.6 4.9 12.9 5 12.2Z" stroke={color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    {/* contactless waves */}
+    <path d="M19.4 8.1C20.8 9.6 21.5 11.1 21.5 11.6C21.5 12.2 20.8 13.7 19.4 15.2" stroke={color} strokeWidth="1.7" strokeLinecap="round" />
+    <path d="M18 10C18.8 10.8 19.1 11.2 19.1 11.6C19.1 12.1 18.8 12.6 18 13.4" stroke={color} strokeWidth="1.7" strokeLinecap="round" opacity="0.8" />
+  </svg>
+);
+
+// 35. HAND-DRAWN TABLE STAND / TENT SIGN (table-top sign, purple)
+export const IconHandTableStand: React.FC<IconProps> = ({ size = 24, color = '#a78bfa', className, style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
+    {/* upright sign panel */}
+    <path d="M5.6 2.9C9.3 2.6 14.7 2.6 18.4 2.9C18.7 6.4 18.7 12.2 18.4 15.6C14.7 15.9 9.3 15.9 5.6 15.6C5.3 12.2 5.3 6.4 5.6 2.9Z" stroke={color} strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+    {/* stem to base */}
+    <path d="M12 15.8C12 16.9 12 18 12 19.1" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+    {/* base block */}
+    <path d="M4 19.3C8.7 18.9 15.3 18.9 20 19.3C20.1 20 20.1 20.7 20 21.4C15.3 21.8 8.7 21.8 4 21.4C3.9 20.7 3.9 20 4 19.3Z" stroke={color} strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+    {/* NFC waves inside the sign */}
+    <path d="M9.4 8.1C10.9 6.9 13.1 6.9 14.6 8.1" stroke={color} strokeWidth="1.4" strokeLinecap="round" opacity="0.85" />
+    <path d="M10.6 10.3C11.4 9.7 12.6 9.7 13.4 10.3" stroke={color} strokeWidth="1.4" strokeLinecap="round" opacity="0.85" />
+    <path d="M12 12.4L12 12.5" stroke={color} strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
