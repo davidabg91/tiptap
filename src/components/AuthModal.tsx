@@ -118,7 +118,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             padding: '0.25rem 0.8rem',
             borderRadius: '99px'
           }}>
-            <img src="/logo.jpg" alt="TipTap Logo" style={{ width: '20px', height: '20px', borderRadius: '5px' }} />
+            <img src={`${import.meta.env.BASE_URL}logo.jpg`} alt="TipTap Logo" style={{ width: '20px', height: '20px', borderRadius: '5px' }} />
             <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '0.5px' }}>
               Tip<span style={{ color: 'var(--accent-purple)' }}>Tap</span> за Управители
             </span>

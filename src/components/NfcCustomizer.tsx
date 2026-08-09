@@ -314,7 +314,7 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
                       >
                         {logo === 'custom' ? (
                           <img 
-                            src="/card-front.png" 
+                            src={`${import.meta.env.BASE_URL}card-front.png`} 
                             alt="Реален пример Предна страна" 
                             style={{ 
                               width: '100%', 
@@ -413,7 +413,7 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
                       >
                         {logo === 'custom' ? (
                           <img 
-                            src="/card-back.png" 
+                            src={`${import.meta.env.BASE_URL}card-back.png`} 
                             alt="Реален пример Задна страна" 
                             style={{ 
                               width: '100%', 

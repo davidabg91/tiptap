@@ -198,7 +198,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
         {/* RESTAURANT BRAND BRANDING */}
         <div style={{ padding: '0 0.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.35rem' }}>
-            <img src="/logo.jpg" alt="TipTap Logo" style={{ width: '28px', height: '28px', borderRadius: '8px', objectFit: 'cover' }} />
+            <img src={`${import.meta.env.BASE_URL}logo.jpg`} alt="TipTap Logo" style={{ width: '28px', height: '28px', borderRadius: '8px', objectFit: 'cover' }} />
             <span style={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '0.5px' }} className="text-gradient-purple">
               TipTap SaaS
             </span>

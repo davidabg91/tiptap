@@ -318,7 +318,7 @@ function App() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <img 
-                src="/logo.jpg" 
+                src={`${import.meta.env.BASE_URL}logo.jpg`} 
                 alt="TipTap Logo" 
                 style={{ width: '24px', height: '24px', borderRadius: '6px', objectFit: 'cover' }} 
               />

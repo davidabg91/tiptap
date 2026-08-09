@@ -156,7 +156,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 2 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <img 
-                        src="/logo.jpg" 
+                        src={`${import.meta.env.BASE_URL}logo.jpg`} 
                         alt="Ресторант Леденика Logo" 
                         style={{ 
                           width: '32px', 
@@ -606,7 +606,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 transition: 'transform 0.15s ease-out'
               }}>
                 <img 
-                  src="/card-front.png" 
+                  src={`${import.meta.env.BASE_URL}card-front.png`} 
                   alt="Предна страна на NFC карта TipTap" 
                   style={{
                     width: '250px',
@@ -619,7 +619,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   }}
                 />
                 <img 
-                  src="/card-back.png" 
+                  src={`${import.meta.env.BASE_URL}card-back.png`} 
                   alt="Задна страна на NFC карта с QR код" 
                   style={{
                     width: '250px',
