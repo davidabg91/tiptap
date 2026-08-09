@@ -8,15 +8,14 @@ import {
   CustomTrendingUp as TrendingUp, 
   CustomCheckCircle as CheckCircle, 
   CustomShieldCheck as ShieldCheck, 
-  CustomSmartphone as Smartphone, 
-  CustomZap as Zap, 
-  CustomAward as Award, 
+  CustomSmartphone as Smartphone,
+  CustomAward as Award,
   CustomBarChart3 as BarChart3, 
   CustomMessageSquare as MessageSquare, 
   CustomChevronDown as ChevronDown
 } from './CustomIcons';
 import { 
-  IconNfcChip, IconCyberAnalytics, IconVipWaiters, IconEuroChip, 
+  IconNfcChip, IconVipWaiters, IconEuroChip,
   IconSmartRadar, IconCyberQr, IconPrismStar 
 } from './CustomIcons';
 
@@ -276,37 +275,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem', padding: '0 4vw', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
           
           <div style={{ textAlign: 'center', maxWidth: '650px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '0.65rem', 
-              background: 'rgba(18, 18, 30, 0.9)', 
-              border: '1px solid rgba(6, 182, 212, 0.35)', 
-              padding: '0.45rem 1.15rem', 
-              borderRadius: '99px', 
-              fontSize: '0.78rem', 
-              fontWeight: 800, 
-              color: 'var(--text-primary)', 
-              marginBottom: '1rem', 
-              letterSpacing: '0.5px', 
-              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.25)' 
-            }}>
-              <div style={{
-                width: '24px',
-                height: '24px',
-                borderRadius: '6px',
-                background: 'linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                boxShadow: '0 2px 8px rgba(6, 182, 212, 0.5)'
-              }}>
-                <Zap size={14} />
-              </div>
-              <span style={{ letterSpacing: '0.75px' }}>4-СТЪПКОВ БЪРЗ ПРОЦЕС</span>
-            </div>
-
             <h2 className="hero-display-title" style={{ fontSize: '2.5rem', margin: '0 0 0.5rem', textAlign: 'center' }}>
               Как Работи <span className="text-gradient-platinum">Платформата?</span>
             </h2>
@@ -440,36 +408,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             {/* Left Controls & Sliders */}
             <div style={{ zIndex: 2 }}>
-              <div style={{ 
-                display: 'inline-flex', 
-                alignItems: 'center', 
-                gap: '0.65rem', 
-                background: 'rgba(18, 18, 30, 0.9)', 
-                border: '1px solid rgba(139, 92, 246, 0.35)', 
-                padding: '0.45rem 1.15rem', 
-                borderRadius: '99px', 
-                fontSize: '0.78rem', 
-                fontWeight: 800, 
-                color: 'var(--text-primary)', 
-                marginBottom: '1.25rem', 
-                letterSpacing: '0.5px', 
-                boxShadow: '0 6px 20px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.25)' 
-              }}>
-                <div style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '6px',
-                  background: 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-cyan) 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#fff',
-                  boxShadow: '0 2px 8px rgba(139, 92, 246, 0.5)'
-                }}>
-                  <IconCyberAnalytics size={16} />
-                </div>
-                <span style={{ letterSpacing: '0.75px' }}>ИНТЕРАКТИВЕН КАЛКУЛАТОР ЗА РЕСТОРАНТИ</span>
-              </div>
               <h2 style={{
                 fontFamily: 'var(--font-official)',
                 fontSize: '1.85rem',
