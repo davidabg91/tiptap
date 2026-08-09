@@ -1289,18 +1289,52 @@ select option:checked {
     top: 64px;
     z-index: 5;
     min-height: 0 !important;
-    max-height: 44vh;
-    padding: 1rem !important;
+    max-height: 50vh;
+    padding: 0.9rem 1rem !important;
     /* opaque so the scrolling form underneath is not visible through it */
     background: #100f22 !important;
     box-shadow: 0 16px 26px rgba(0, 0, 0, 0.55);
   }
-  /* scale the 3D scenes down so they fit the compact sticky preview */
-  .customizer-preview .stand-scene {
-    transform: scale(0.6);
+  /* Collapse the stage's fixed 340px height so the scenes and the
+     action row below them sit tight together (no big empty gap). */
+  .customizer-stage {
+    min-height: 0 !important;
+    gap: 0.75rem !important;
+    margin-bottom: 0.4rem !important;
   }
+  /* Scale the 3D scenes down AND pull the surrounding whitespace back
+     in with negative margins — transform:scale keeps the original box,
+     so without this the flip button/hint get pushed off-screen.
+     (The card carries an inline scale(1.32), so we need !important.) */
   .customizer-preview .card-scene {
-    transform: scale(0.78);
+    transform: scale(0.95) !important;
+    margin: -6px -26px !important;
+  }
+  .customizer-preview .stand-scene {
+    transform: scale(0.58);
+    margin: -66px -48px;
+  }
+  /* Keep the flip button + hint compact and always visible */
+  .customizer-preview .btn {
+    padding: 0.45rem 0.9rem !important;
+    font-size: 0.8rem !important;
+  }
+  /* "Both" mode: keep card + stand stacked (they're too wide to sit
+     side by side without the 3D card clipping), scale them down and
+     give the preview a bit more height so nothing is cut off. */
+  .customizer-preview:has(.is-both) {
+    max-height: 66vh;
+  }
+  .customizer-stage.is-both {
+    gap: 0 !important;
+  }
+  .customizer-stage.is-both .card-scene {
+    transform: scale(0.6) !important;
+    margin: -34px -26px !important;
+  }
+  .customizer-stage.is-both .stand-scene {
+    transform: scale(0.5);
+    margin: -84px -48px;
   }
 }
 

@@ -144,12 +144,12 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
           ) : (
             <>
               {/* 3D INTERACTIVE CANVAS STAGE */}
-              <div style={{ 
-                perspective: '1000px', 
-                width: '100%', 
-                minHeight: '340px', 
-                display: 'flex', 
-                justifyContent: 'center', 
+              <div className={`customizer-stage ${type === 'both' ? 'is-both' : ''}`} style={{
+                perspective: '1000px',
+                width: '100%',
+                minHeight: '340px',
+                display: 'flex',
+                justifyContent: 'center',
                 alignItems: 'center',
                 gap: '2rem',
                 flexWrap: 'wrap',
