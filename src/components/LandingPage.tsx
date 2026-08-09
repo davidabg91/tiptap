@@ -16,7 +16,8 @@ import {
 } from './CustomIcons';
 import { 
   IconNfcChip, IconVipWaiters, IconEuroChip,
-  IconSmartRadar, IconCyberQr, IconPrismStar 
+  IconSmartRadar, IconCyberQr, IconPrismStar,
+  IconHandChart, IconHandShieldStar, IconHandTipCard
 } from './CustomIcons';
 
 interface LandingPageProps {
@@ -95,18 +96,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             {/* 3 Real Problem-Solving Benefit Pills (Manager-Centric Order) */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', width: '100%', maxWidth: '720px', margin: '0.5rem 0' }}>
-              <div className="glow-border-card" style={{ padding: '1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)' }}>
-                <div style={{ color: 'var(--accent-purple)', fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.2rem' }}>📊 Контрол за Шефа</div>
+              <div className="glow-border-card" style={{ padding: '1.15rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+                <IconHandChart size={30} color="#a78bfa" />
+                <div style={{ color: 'var(--accent-purple)', fontWeight: 800, fontSize: '0.95rem' }}>Контрол за Шефа</div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Реална оценка и анализи за всеки сервитьор</p>
               </div>
 
-              <div className="glow-border-card" style={{ padding: '1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)' }}>
-                <div style={{ color: 'var(--gold)', fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.2rem' }}>⭐ Защита &amp; Google 5★</div>
+              <div className="glow-border-card" style={{ padding: '1.15rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+                <IconHandShieldStar size={30} color="#a78bfa" />
+                <div style={{ color: 'var(--accent-purple)', fontWeight: 800, fontSize: '0.95rem' }}>Защита &amp; Google 5★</div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Скрит админ чат за лошите отзиви &amp; Google 5★</p>
               </div>
 
-              <div className="glow-border-card" style={{ padding: '1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)' }}>
-                <div style={{ color: 'var(--green)', fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.2rem' }}>💳 Мотивация за Екипа</div>
+              <div className="glow-border-card" style={{ padding: '1.15rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+                <IconHandTipCard size={30} color="#a78bfa" />
+                <div style={{ color: 'var(--accent-purple)', fontWeight: 800, fontSize: '0.95rem' }}>Мотивация за Екипа</div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Онлайн бакшиши &amp; Бонус система за сервиза</p>
               </div>
             </div>

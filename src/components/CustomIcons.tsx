@@ -675,3 +675,32 @@ export const AppleLogoIcon: React.FC<IconProps> = ({ size = 20, color = "#ffffff
     <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.33c.66-.8 1.11-1.92.99-3.03-.96.04-2.12.64-2.8 1.44-.6.7-1.13 1.83-.99 2.92 1.07.08 2.14-.53 2.8-1.33z" />
   </svg>
 );
+
+// 31. HAND-DRAWN ANALYTICS / BOSS CONTROL (purple, sketchy)
+export const IconHandChart: React.FC<IconProps> = ({ size = 24, color = '#a78bfa', className, style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
+    <path d="M4.5 3.4C4.2 7.2 4.3 15.6 4.4 20.1C8.7 20.4 15.9 20.3 20.6 20.2" stroke={color} strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M8.3 20C8.4 18.1 8.2 16.4 8.3 14.3" stroke={color} strokeWidth="2.6" strokeLinecap="round" />
+    <path d="M12.4 20.1C12.5 17 12.3 13.6 12.4 10.4" stroke={color} strokeWidth="2.6" strokeLinecap="round" />
+    <path d="M16.5 20C16.6 15.4 16.4 10.7 16.5 6.6" stroke={color} strokeWidth="2.6" strokeLinecap="round" />
+    <path d="M7 12.8C10.4 8.6 13.8 5.9 17.4 4.2" stroke={color} strokeWidth="1.1" opacity="0.4" strokeLinecap="round" strokeDasharray="0.5 2.6" />
+  </svg>
+);
+
+// 32. HAND-DRAWN SHIELD WITH STAR (protection + Google 5★, purple)
+export const IconHandShieldStar: React.FC<IconProps> = ({ size = 24, color = '#a78bfa', className, style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
+    <path d="M12 2.7C12 2.7 8 4.7 4.4 5.2C4.1 9.3 4.1 15.6 12 21.3C19.9 15.6 19.9 9.3 19.6 5.2C16 4.7 12 2.7 12 2.7Z" stroke={color} strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M12 7.4C12.1 7.4 12.2 7.5 12.3 7.7L13.1 9.4C13.1 9.5 13.3 9.6 13.4 9.7L15.3 9.9C15.6 9.9 15.7 10.3 15.5 10.5L14.1 11.9C14 12 13.9 12.1 14 12.3L14.3 14.2C14.4 14.4 14.1 14.7 13.9 14.5L12.2 13.6C12.1 13.5 11.9 13.5 11.8 13.6L10.1 14.5C9.9 14.7 9.6 14.4 9.7 14.2L10 12.3C10.1 12.1 10 12 9.9 11.9L8.5 10.5C8.3 10.3 8.4 9.9 8.7 9.9L10.6 9.7C10.7 9.6 10.9 9.5 10.9 9.4L11.7 7.7C11.8 7.5 11.9 7.4 12 7.4Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6.5 6.4C7.6 6 8.9 5.6 10 5" stroke={color} strokeWidth="1" opacity="0.4" strokeLinecap="round" />
+  </svg>
+);
+
+// 33. HAND-DRAWN TIP CARD WITH HEART (team motivation / online tips, purple)
+export const IconHandTipCard: React.FC<IconProps> = ({ size = 24, color = '#a78bfa', className, style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
+    <path d="M3.3 7.2C7.3 6.8 16.9 6.7 20.7 7.1C21.1 10.1 21.1 14 20.7 16.9C16.8 17.3 7.1 17.2 3.3 16.8C2.9 13.9 2.9 10.1 3.3 7.2Z" stroke={color} strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M3.6 10.2C7.6 10.4 16.8 10.4 20.5 10.2" stroke={color} strokeWidth="1.6" strokeLinecap="round" opacity="0.75" />
+    <path d="M12 15.6C11.9 15.6 11.8 15.5 11.7 15.4C10.7 14.5 9.9 13.8 9.4 13.1C9 12.6 8.9 12 9.1 11.5C9.4 10.8 10.2 10.5 10.9 10.8C11.3 11 11.7 11.3 12 11.7C12.3 11.3 12.7 11 13.1 10.8C13.8 10.5 14.6 10.8 14.9 11.5C15.1 12 15 12.6 14.6 13.1C14.1 13.8 13.3 14.5 12.3 15.4C12.2 15.5 12.1 15.6 12 15.6Z" stroke={color} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
