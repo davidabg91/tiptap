@@ -98,7 +98,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', width: '100%', maxWidth: '720px', margin: '0.5rem 0' }}>
               <div className="glow-border-card" style={{ padding: '1.15rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
                 <IconHandChart size={30} color="#a78bfa" />
-                <div style={{ color: 'var(--accent-purple)', fontWeight: 800, fontSize: '0.95rem' }}>Контрол за Шефа</div>
+                <div style={{ color: '#3b82f6', fontWeight: 800, fontSize: '0.95rem' }}>Контрол за Шефа</div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Реална оценка и анализи за всеки сервитьор</p>
               </div>
 
