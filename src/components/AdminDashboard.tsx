@@ -183,8 +183,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
     <div className="mobile-stack" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem', width: '100%', maxWidth: '1440px', margin: '0 auto', alignItems: 'start' }}>
       
       {/* LEFT EXECUTIVE SIDEBAR */}
-      <aside className="glass-panel" style={{ 
-        padding: '1.5rem 1rem', 
+      <aside className="glass-panel dash-sidebar" style={{
+        padding: '1.5rem 1rem',
         borderRadius: '24px', 
         background: 'rgba(12, 12, 24, 0.95)', 
         border: '1px solid rgba(139, 92, 246, 0.3)',

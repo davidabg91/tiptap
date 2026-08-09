@@ -1241,6 +1241,44 @@ select option:checked {
   .dash-bar-chart > div > span:first-child {
     display: none;
   }
+
+  /* ---- Dashboard sidebar: stop it from sticking on mobile.
+     Sticky + top:6rem made it float over the scrolling content. ---- */
+  .dash-sidebar {
+    position: static !important;
+    top: auto !important;
+  }
+
+  /* ---- Hero phone demo (CustomerRating inside the phone frame):
+     the phone is narrower on mobile, so scale the rating UI to fit. ---- */
+  .phone-screen > div {
+    padding: 1rem 0.6rem !important;
+    gap: 1rem !important;
+  }
+  .phone-screen h1 {
+    font-size: 1rem !important;
+    letter-spacing: -0.2px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    /* wrap only between words, never split a word in half */
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+  }
+  .phone-screen .glass-card {
+    padding: 1.1rem 0.75rem !important;
+  }
+  .phone-screen .glow-border-card {
+    padding: 1.1rem 0.85rem !important;
+  }
+  /* shrink the stars and their gap so all 5 (plus the active
+     scale-up) stay inside the card */
+  .phone-screen .star-rating {
+    gap: 0.3rem !important;
+  }
+  .phone-screen .star-rating svg {
+    width: 30px !important;
+    height: 30px !important;
+  }
 }
 
 /* ---------- SMALL PHONES (<= 480px) ---------- */
@@ -1252,10 +1290,10 @@ select option:checked {
   .hero-display-title {
     font-size: clamp(1.75rem, 8.5vw, 2.2rem);
   }
-  /* Tighten oversized inline headings so they never clip */
+  /* Let long headings wrap only when a word truly can't fit,
+     without splitting normal words in the middle */
   h1, h2 {
     overflow-wrap: break-word;
-    word-break: break-word;
   }
   .floating-island-navbar {
     padding: 0.35rem 0.4rem 0.35rem 0.75rem;
