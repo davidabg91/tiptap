@@ -7,9 +7,10 @@ import { HowItWorks } from './components/HowItWorks';
 import { PricingPage } from './components/PricingPage';
 import { AuthModal } from './components/AuthModal';
 import { LegalPage } from './components/LegalPage';
+import { AboutPage } from './components/AboutPage';
 import { TipTapBrandSymbol, CustomCreditCard as CreditCard, CustomMenu as Menu, CustomX as X, CustomHeart as Heart } from './components/CustomIcons';
 
-type ViewState = 'landing' | 'dashboard' | 'customizer' | 'rate' | 'howitworks' | 'pricing' | 'legal';
+type ViewState = 'landing' | 'dashboard' | 'customizer' | 'rate' | 'howitworks' | 'pricing' | 'legal' | 'about';
 type LegalTab = 'terms' | 'privacy' | 'cookies' | 'withdrawal' | 'imprint';
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
         setView('howitworks');
       } else if (hash === '#pricing') {
         setView('pricing');
+      } else if (hash === '#about') {
+        setView('about');
       } else if (hash === '#login' || hash === '#register') {
         setAuthInitialMode(hash === '#register' ? 'register' : 'login');
         setAuthModalOpen(true);
@@ -65,6 +68,7 @@ function App() {
     else if (newView === 'customizer') window.location.hash = 'customizer';
     else if (newView === 'howitworks') window.location.hash = 'how-it-works';
     else if (newView === 'pricing') window.location.hash = 'pricing';
+    else if (newView === 'about') window.location.hash = 'about';
     else if (newView === 'rate') window.location.hash = 'rate/waiter-2';
     else if (newView === 'legal') window.location.hash = `legal/${legalTab}`;
     
@@ -78,6 +82,16 @@ function App() {
     setMobileMenuOpen(false);
     window.location.hash = `legal/${tab}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToAboutContact = () => {
+    setView('about');
+    setMobileMenuOpen(false);
+    window.location.hash = 'about';
+    // Let the About page mount, then scroll to the inquiry form.
+    setTimeout(() => {
+      document.getElementById('about-contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
   };
 
   const openAuth = (mode: 'login' | 'register' = 'login') => {
@@ -226,13 +240,19 @@ function App() {
           >
             Клиентски Изглед (Демо)
           </span>
-          <span 
+          <span
             style={{ fontSize: '1.1rem', color: view === 'dashboard' ? 'var(--accent-purple)' : '#fff', fontWeight: 600 }}
             onClick={() => navigateTo('dashboard')}
           >
             Демо за Управители
           </span>
-          <span 
+          <span
+            style={{ fontSize: '1.1rem', color: view === 'about' ? 'var(--accent-purple)' : '#fff', fontWeight: 600 }}
+            onClick={() => navigateTo('about')}
+          >
+            За нас
+          </span>
+          <span
             style={{ fontSize: '1.1rem', color: '#f59e0b', fontWeight: 700 }}
             onClick={() => openAuth('login')}
           >
@@ -302,6 +322,10 @@ function App() {
           </div>
         )}
 
+        {view === 'about' && (
+          <AboutPage onNavigateToCustomizer={() => navigateTo('customizer')} />
+        )}
+
         {view === 'legal' && (
           <LegalPage initialTab={legalTab} />
         )}
@@ -352,17 +376,24 @@ function App() {
               <span style={{ cursor: 'pointer' }} onClick={() => navigateTo('customizer')}>Поръчка на брандирани карти</span>
               <span style={{ cursor: 'pointer' }} onClick={() => navigateTo('customizer')}>Поръчка на табелки за маси</span>
               <span style={{ cursor: 'pointer' }} onClick={() => navigateTo('dashboard')}>Управление на сервитьори</span>
-              <span style={{ cursor: 'pointer' }} onClick={() => navigateTo('dashboard')}>Абонаментни планове</span>
+              <span style={{ cursor: 'pointer' }} onClick={() => navigateTo('about')}>За нас</span>
             </div>
           </div>
 
           <div>
             <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem' }}>Контакти &amp; Поддръжка</h4>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: 1.6 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: 1.7, marginBottom: '1rem' }}>
+              Дейвид Димитров — управител<br />
               София, България<br />
-              Email: support@tiptap.bg<br />
-              Тел: +359 888 123 456
+              Тел: <a href="tel:0876141826" style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>0876 141 826</a>
             </p>
+            <button
+              className="btn ios-glass-btn-primary"
+              style={{ fontSize: '0.85rem', padding: '0.6rem 1.3rem' }}
+              onClick={navigateToAboutContact}
+            >
+              Пишете ни
+            </button>
           </div>
         </div>
 

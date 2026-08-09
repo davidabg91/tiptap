@@ -104,13 +104,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
               <div className="glow-border-card" style={{ padding: '1.15rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
                 <IconHandShieldStar size={30} color="#a78bfa" />
-                <div style={{ color: 'var(--accent-purple)', fontWeight: 800, fontSize: '0.95rem' }}>Защита &amp; Google 5★</div>
+                <div style={{ color: 'var(--gold)', fontWeight: 800, fontSize: '0.95rem' }}>Защита &amp; Google 5★</div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Скрит админ чат за лошите отзиви &amp; Google 5★</p>
               </div>
 
               <div className="glow-border-card" style={{ padding: '1.15rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
                 <IconHandTipCard size={30} color="#a78bfa" />
-                <div style={{ color: 'var(--accent-purple)', fontWeight: 800, fontSize: '0.95rem' }}>Мотивация за Екипа</div>
+                <div style={{ color: 'var(--green)', fontWeight: 800, fontSize: '0.95rem' }}>Мотивация за Екипа</div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Онлайн бакшиши &amp; Бонус система за сервиза</p>
               </div>
             </div>
