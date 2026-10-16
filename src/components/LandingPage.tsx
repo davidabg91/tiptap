@@ -263,6 +263,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                 <div style={{ flex: 1, overflowY: 'auto', paddingTop: '0.5rem', position: 'relative' }} className="phone-screen">
                   <CustomerRating
+                    demo
                     initialWaiterId="waiter-2"
                     onReviewSubmitted={() => setDemoReviewCount(demoReviewCount + 1)}
                   />

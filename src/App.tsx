@@ -19,12 +19,15 @@ function App() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authInitialMode, setAuthInitialMode] = useState<'login' | 'register'>('login');
   const [legalTab, setLegalTab] = useState<LegalTab>('terms');
+  const [rateSlug, setRateSlug] = useState<string>('waiter-1');
 
   // Check URL path simulation (e.g., if there's a hash like #pricing)
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
       if (hash.startsWith('#rate/')) {
+        const slug = decodeURIComponent(hash.slice('#rate/'.length));
+        if (slug) setRateSlug(slug);
         setView('rate');
       } else if (hash === '#dashboard') {
         setView('dashboard');
@@ -317,7 +320,7 @@ function App() {
               boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
               overflow: 'hidden'
             }}>
-              <CustomerRating initialWaiterId="waiter-1" />
+              <CustomerRating initialWaiterId={rateSlug} />
             </div>
           </div>
         )}

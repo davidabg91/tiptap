@@ -14,6 +14,7 @@ import {
   IconHandShieldStar,
   IconHandTipCard,
 } from './CustomIcons';
+import { submitInquiry } from '../lib/data';
 
 interface AboutPageProps {
   onNavigateToCustomizer: () => void;
@@ -22,12 +23,27 @@ interface AboutPageProps {
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigateToCustomizer }) => {
   const [form, setForm] = useState({ name: '', contact: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.contact.trim() || !form.message.trim()) return;
-    // Mock submit — in a real backend this would POST the inquiry.
-    setSubmitted(true);
+    if (!form.name.trim() || !form.contact.trim() || !form.message.trim() || sending) return;
+    setSending(true);
+    setError(false);
+    try {
+      await submitInquiry({
+        name: form.name.trim(),
+        contact: form.contact.trim(),
+        subject: form.subject.trim() || undefined,
+        message: form.message.trim(),
+      });
+      setSubmitted(true);
+    } catch {
+      setError(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   const offerings = [
@@ -234,8 +250,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigateToCustomizer }) 
                       style={{ resize: 'vertical', minHeight: '110px', fontFamily: 'var(--font-body)' }} />
                   </div>
 
-                  <button type="submit" className="btn ios-glass-btn-primary" style={{ width: '100%', padding: '0.95rem', fontSize: '1rem', marginTop: '0.25rem' }}>
-                    Изпрати запитване <Send size={17} />
+                  {error && (
+                    <p style={{ color: '#fca5a5', fontSize: '0.85rem', margin: 0 }}>
+                      Нещо се обърка. Моля, опитайте отново или се обадете на 0876 141 826.
+                    </p>
+                  )}
+                  <button type="submit" disabled={sending} className="btn ios-glass-btn-primary" style={{ width: '100%', padding: '0.95rem', fontSize: '1rem', marginTop: '0.25rem', opacity: sending ? 0.7 : 1 }}>
+                    {sending ? 'Изпращане…' : <>Изпрати запитване <Send size={17} /></>}
                   </button>
                 </form>
               )}

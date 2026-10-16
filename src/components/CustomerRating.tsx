@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
-import { getWaiters, addReview, type Waiter } from '../utils/mockData';
-import { 
-  CustomStar as Star, 
-  CustomCheckCircle as CheckCircle, 
-  CustomHeart as Heart, 
-  CustomSend as Send, 
-  CustomAward as Award, 
-  CustomMessageSquare as MessageSquare, 
+import React, { useState, useEffect } from 'react';
+import { getWaiters, type Waiter } from '../utils/mockData';
+import { getRatingTarget, submitReview, type RatingTarget } from '../lib/data';
+import { isSupabaseEnabled } from '../lib/supabase';
+import {
+  CustomStar as Star,
+  CustomCheckCircle as CheckCircle,
+  CustomHeart as Heart,
+  CustomSend as Send,
+  CustomAward as Award,
+  CustomMessageSquare as MessageSquare,
   CustomExternalLink as ExternalLink
 } from './CustomIcons';
 
 interface CustomerRatingProps {
   initialWaiterId?: string;
   onReviewSubmitted?: () => void;
+  /** When true, always use local mock data (used by the marketing hero demo
+   *  so visitor test-taps never write to the real database). */
+  demo?: boolean;
 }
 
 // ─── Per-star feedback configuration ────────────────────────────────────────
@@ -142,15 +147,48 @@ const STAR_CONFIG = {
 
 type StarCount = 1 | 2 | 3 | 4 | 5;
 
-export const CustomerRating: React.FC<CustomerRatingProps> = ({ 
+export const CustomerRating: React.FC<CustomerRatingProps> = ({
   initialWaiterId = 'waiter-1',
-  onReviewSubmitted 
+  onReviewSubmitted,
+  demo = false,
 }) => {
+  const live = isSupabaseEnabled && !demo;
+
   const waiters = getWaiters();
   const [selectedWaiter, setSelectedWaiter] = useState<Waiter>(
     waiters.find(w => w.id === initialWaiterId) || waiters[0]
   );
-  
+
+  // Live mode: resolve the NFC/QR slug to a real waiter via the backend.
+  const [target, setTarget] = useState<RatingTarget | null>(null);
+  const [loading, setLoading] = useState<boolean>(live);
+  const [notFound, setNotFound] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [googleUrl, setGoogleUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!live) { setLoading(false); return; }
+    setLoading(true);
+    getRatingTarget(initialWaiterId)
+      .then((t) => {
+        if (cancelled) return;
+        if (!t) setNotFound(true);
+        else setTarget(t);
+      })
+      .catch(() => { if (!cancelled) setNotFound(true); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [live, initialWaiterId]);
+
+  // Unified display source: the real target in live mode, the mock waiter otherwise.
+  const display = {
+    name: live ? (target?.name ?? '') : selectedWaiter.name,
+    role: live ? (target?.role ?? '') : selectedWaiter.role,
+    avatar: live ? (target?.avatarUrl ?? '') : selectedWaiter.avatar,
+    restaurant: live ? (target?.restaurantName ?? '') : 'Ресторант Леденика',
+  };
+
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -175,19 +213,32 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
     setRating(star);
   };
 
+  const persistReview = async (finalTip: number) => {
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const result = await submitReview({
+        slug: initialWaiterId,
+        waiterId: selectedWaiter.id,
+        waiterName: display.name,
+        rating,
+        comment,
+        tipAmount: finalTip,
+        tags: selectedTags,
+      });
+      setGoogleUrl(result.googleReviewUrl);
+      setStep('success');
+      if (onReviewSubmitted) onReviewSubmitted();
+    } catch {
+      // Keep the user on the form so they can retry.
+      setSubmitting(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const finalTip = customTip ? parseFloat(customTip) || 0 : tipAmount;
-    addReview({
-      waiterId: selectedWaiter.id,
-      waiterName: selectedWaiter.name,
-      rating,
-      comment,
-      tipAmount: finalTip,
-      tags: selectedTags
-    });
-    setStep('success');
-    if (onReviewSubmitted) onReviewSubmitted();
+    void persistReview(finalTip);
   };
 
   const handleProceed = (e: React.FormEvent) => {
@@ -196,27 +247,39 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
     if (cfg.showTip) {
       setStep('tip');
     } else {
-      // For 1–2 stars: submit directly without tip step
-      const finalTip = 0;
-      addReview({
-        waiterId: selectedWaiter.id,
-        waiterName: selectedWaiter.name,
-        rating,
-        comment,
-        tipAmount: finalTip,
-        tags: selectedTags
-      });
-      setStep('success');
-      if (onReviewSubmitted) onReviewSubmitted();
+      // For 1–2 stars: submit directly without a tip step.
+      void persistReview(0);
     }
   };
 
   const displayRating = hoverRating || rating;
 
+  // Live mode: loading / unknown-card states.
+  if (live && loading) {
+    return (
+      <div style={{ maxWidth: '520px', margin: '0 auto', padding: '3rem 1.5rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+        Зареждане…
+      </div>
+    );
+  }
+  if (live && notFound) {
+    return (
+      <div style={{ maxWidth: '520px', margin: '0 auto', padding: '3rem 1.5rem', textAlign: 'center' }}>
+        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(239,68,68,0.12)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+          <MessageSquare size={32} />
+        </div>
+        <h3 style={{ fontSize: '1.3rem', fontWeight: 800, margin: '0 0 0.5rem', color: '#fff' }}>Картата не е разпозната</h3>
+        <p style={{ color: 'var(--text-secondary)', margin: 0 }}>
+          Този код не отговаря на активен сервитьор. Моля, свържете се с ресторанта.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ 
-      maxWidth: '520px', 
-      margin: '0 auto', 
+    <div style={{
+      maxWidth: '520px',
+      margin: '0 auto',
       padding: '1.5rem 1rem',
       display: 'flex',
       flexDirection: 'column',
@@ -233,9 +296,9 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
           fontSize: '0.75rem', fontWeight: 800, color: 'var(--accent-purple)', 
           marginBottom: '0.6rem', letterSpacing: '0.8px', textTransform: 'uppercase'
         }}>
-          Ресторант Леденика
+          {display.restaurant}
         </div>
-        <h1 style={{ 
+        <h1 style={{
           fontSize: '1.8rem', fontWeight: 900, margin: 0, letterSpacing: '-0.5px',
           background: 'linear-gradient(135deg, #ffffff 0%, #a78bfa 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
@@ -252,9 +315,9 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
         alignItems: 'center', gap: '0.85rem' 
       }}>
         <div style={{ position: 'relative' }}>
-          <img 
-            src={selectedWaiter.avatar} alt={selectedWaiter.name} 
-            style={{ 
+          <img
+            src={display.avatar} alt={display.name}
+            style={{
               width: '92px', height: '92px', borderRadius: '50%', objectFit: 'cover',
               border: `3px solid ${cfg ? cfg.color : 'var(--accent-purple)'}`,
               boxShadow: `0 8px 30px ${cfg ? cfg.glow : 'rgba(139, 92, 246, 0.4)'}`,
@@ -271,31 +334,33 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
         </div>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginBottom: '0.2rem' }}>
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: 0 }}>{selectedWaiter.name}</h3>
+            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: 0 }}>{display.name}</h3>
             <Award size={16} color="var(--gold)" />
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', margin: 0 }}>
-            {selectedWaiter.role} • <strong>Ресторант Леденика</strong>
+            {display.role} • <strong>{display.restaurant}</strong>
           </p>
         </div>
-        {/* DEMO WAITER SWITCHER */}
-        <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.2rem' }}>
-          {waiters.map(w => (
-            <button key={w.id} type="button"
-              style={{
-                fontSize: '0.725rem', padding: '0.25rem 0.65rem', borderRadius: '99px',
-                background: selectedWaiter.id === w.id ? 'var(--accent-purple)' : 'rgba(255,255,255,0.05)',
-                border: selectedWaiter.id === w.id ? '1px solid var(--accent-purple)' : '1px solid var(--border-light)',
-                color: selectedWaiter.id === w.id ? '#fff' : 'var(--text-muted)',
-                fontWeight: selectedWaiter.id === w.id ? 700 : 400,
-                cursor: 'pointer'
-              }}
-              onClick={() => { setSelectedWaiter(w); setStep('rating'); setRating(0); setSelectedTags([]); setComment(''); }}
-            >
-              {w.name.split(' ')[0]}
-            </button>
-          ))}
-        </div>
+        {/* DEMO WAITER SWITCHER — only in the marketing demo, not the real card flow */}
+        {!live && (
+          <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.2rem' }}>
+            {waiters.map(w => (
+              <button key={w.id} type="button"
+                style={{
+                  fontSize: '0.725rem', padding: '0.25rem 0.65rem', borderRadius: '99px',
+                  background: selectedWaiter.id === w.id ? 'var(--accent-purple)' : 'rgba(255,255,255,0.05)',
+                  border: selectedWaiter.id === w.id ? '1px solid var(--accent-purple)' : '1px solid var(--border-light)',
+                  color: selectedWaiter.id === w.id ? '#fff' : 'var(--text-muted)',
+                  fontWeight: selectedWaiter.id === w.id ? 700 : 400,
+                  cursor: 'pointer'
+                }}
+                onClick={() => { setSelectedWaiter(w); setStep('rating'); setRating(0); setSelectedTags([]); setComment(''); }}
+              >
+                {w.name.split(' ')[0]}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ─── STEP 1: STAR RATING + CONTEXTUAL FEEDBACK ─── */}
@@ -477,7 +542,7 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>Оставете Дигитален Бакшиш</h3>
             </div>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
-              100% от сумата се превежда директно по личната банкова сметка на <strong>{selectedWaiter.name.split(' ')[0]}</strong> през криптирана Apple Pay / Google Pay връзка.
+              100% от сумата се превежда директно по личната банкова сметка на <strong>{(display.name || '').split(' ')[0]}</strong> през криптирана Apple Pay / Google Pay връзка.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.35rem', marginBottom: '1rem' }}>
               <button type="button"
@@ -522,7 +587,7 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
               </button>
             </div>
             <button type="button" className="btn btn-secondary"
-              onClick={(e) => { setTipAmount(0); setCustomTip('0'); handleSubmit(e as any); }}
+              onClick={(e) => { e.preventDefault(); setTipAmount(0); setCustomTip('0'); void persistReview(0); }}
               style={{ width: '100%', padding: '0.75rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}
             >
               Продължи без бакшиш (Изпрати само оценката)
@@ -553,7 +618,7 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
           
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
             {rating >= 3
-              ? <>Вашият отзив бе получен от <strong>{selectedWaiter.name}</strong>. Ресторантът ви благодари за вашата оценка!</>
+              ? <>Вашият отзив бе получен от <strong>{display.name}</strong>. Ресторантът ви благодари за вашата оценка!</>
               : <>Вашата обратна връзка е изпратена до <strong>управителя</strong>. Ще вземем мерки за подобрение. Съжаляваме за неудобството.</>
             }
           </p>
@@ -568,8 +633,8 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
               <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1rem' }}>
                 С 1 клик можете да копирате вашия отзив в Google Maps и да подкрепите ресторанта ни!
               </p>
-              <a href="https://maps.google.com" target="_blank" rel="noreferrer"
-                className="btn btn-primary" 
+              <a href={googleUrl || 'https://maps.google.com'} target="_blank" rel="noreferrer"
+                className="btn btn-primary"
                 style={{ width: '100%', fontSize: '0.9rem', padding: '0.75rem', justifyContent: 'center', background: 'linear-gradient(135deg, var(--gold) 0%, #d97706 100%)' }}
               >
                 Публикувай в Google Maps <ExternalLink size={16} />
@@ -589,8 +654,8 @@ export const CustomerRating: React.FC<CustomerRatingProps> = ({
             </div>
           )}
 
-          <button className="btn btn-secondary" style={{ width: '100%', padding: '0.85rem' }} 
-            onClick={() => { setStep('rating'); setRating(0); setSelectedTags([]); setComment(''); }}>
+          <button className="btn btn-secondary" style={{ width: '100%', padding: '0.85rem' }}
+            onClick={() => { setStep('rating'); setRating(0); setSelectedTags([]); setComment(''); setSubmitting(false); setGoogleUrl(null); }}>
             Нова Оценка
           </button>
         </div>
