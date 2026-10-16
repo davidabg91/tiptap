@@ -8,7 +8,11 @@ import { PricingPage } from './components/PricingPage';
 import { AuthModal } from './components/AuthModal';
 import { LegalPage } from './components/LegalPage';
 import { AboutPage } from './components/AboutPage';
+import { Onboarding } from './components/Onboarding';
 import { TipTapBrandSymbol, CustomCreditCard as CreditCard, CustomMenu as Menu, CustomX as X, CustomHeart as Heart } from './components/CustomIcons';
+import { isSupabaseEnabled } from './lib/supabase';
+import { getSession, onAuthChange, getMyProfile, signOut, type MyProfile } from './lib/data';
+import type { Session } from '@supabase/supabase-js';
 
 type ViewState = 'landing' | 'dashboard' | 'customizer' | 'rate' | 'howitworks' | 'pricing' | 'legal' | 'about';
 type LegalTab = 'terms' | 'privacy' | 'cookies' | 'withdrawal' | 'imprint';
@@ -20,6 +24,32 @@ function App() {
   const [authInitialMode, setAuthInitialMode] = useState<'login' | 'register'>('login');
   const [legalTab, setLegalTab] = useState<LegalTab>('terms');
   const [rateSlug, setRateSlug] = useState<string>('waiter-1');
+
+  // Auth (only relevant when a backend is configured)
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<MyProfile | null>(null);
+
+  useEffect(() => {
+    if (!isSupabaseEnabled) return;
+    let active = true;
+    getSession().then(async (s) => {
+      if (!active) return;
+      setSession(s);
+      if (s) setProfile(await getMyProfile());
+    });
+    const unsubscribe = onAuthChange(async (s) => {
+      setSession(s);
+      setProfile(s ? await getMyProfile() : null);
+    });
+    return () => { active = false; unsubscribe(); };
+  }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+    setSession(null);
+    setProfile(null);
+    navigateTo('landing');
+  };
 
   // Check URL path simulation (e.g., if there's a hash like #pricing)
   useEffect(() => {
@@ -297,9 +327,27 @@ function App() {
 
         {view === 'dashboard' && (
           <div className="section-alt-indigo" style={{ padding: '3rem 4vw 4rem', width: '100%' }}>
-            <AdminDashboard 
-              onNavigateToCustomizer={() => navigateTo('customizer')}
-            />
+            {!isSupabaseEnabled ? (
+              <AdminDashboard onNavigateToCustomizer={() => navigateTo('customizer')} />
+            ) : !session ? (
+              <div style={{ maxWidth: '480px', margin: '0 auto', textAlign: 'center', padding: '3rem 1rem' }}>
+                <h2 style={{ fontFamily: 'var(--font-official)', fontSize: '1.8rem', color: '#fff', marginBottom: '0.75rem' }}>Вход за управители</h2>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Влезте в профила си, за да видите таблото на вашето заведение.</p>
+                <button className="btn ios-glass-btn-primary" style={{ padding: '0.9rem 2rem' }} onClick={() => openAuth('login')}>
+                  Вход / Регистрация
+                </button>
+              </div>
+            ) : profile === null ? (
+              <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-secondary)' }}>Зареждане…</div>
+            ) : !profile.restaurant ? (
+              <Onboarding fullName={profile.fullName} onDone={async () => setProfile(await getMyProfile())} />
+            ) : (
+              <AdminDashboard
+                onNavigateToCustomizer={() => navigateTo('customizer')}
+                restaurant={profile.restaurant}
+                onSignOut={handleSignOut}
+              />
+            )}
           </div>
         )}
 

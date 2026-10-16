@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { 
-  CustomArrowRight as ArrowRight, 
-  CustomCheckCircle as CheckCircle2, 
+import {
+  CustomArrowRight as ArrowRight,
+  CustomCheckCircle as CheckCircle2,
   CustomShieldCheck as ShieldCheck,
   CustomStar as Star,
   CustomX as XMark,
   GoogleLogoIcon,
   AppleLogoIcon
 } from './CustomIcons';
+import { signIn, signUp, createRestaurant } from '../lib/data';
+import { isSupabaseEnabled } from '../lib/supabase';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -32,17 +34,57 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [info, setInfo] = useState<string>('');
 
   if (!isOpen) return null;
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const finishSuccess = (delay = 600) => {
     setSubmitted(true);
     setTimeout(() => {
       onSuccessLogin();
       onClose();
       setSubmitted(false);
-    }, 1200);
+    }, delay);
+  };
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setInfo('');
+
+    // Demo mode (no backend configured): keep the simulated success.
+    if (!isSupabaseEnabled) {
+      finishSuccess(1200);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (mode === 'login') {
+        await signIn(email, password);
+        finishSuccess();
+      } else {
+        const { needsConfirmation } = await signUp(email, password, managerName);
+        if (needsConfirmation) {
+          setInfo('Изпратихме ви имейл за потвърждение. Потвърдете го и влезте.');
+          setMode('login');
+        } else {
+          if (restaurantName.trim()) {
+            await createRestaurant({ name: restaurantName.trim(), fullName: managerName.trim() });
+          }
+          finishSuccess();
+        }
+      }
+    } catch (err: any) {
+      const msg = String(err?.message || '');
+      if (/invalid login credentials/i.test(msg)) setError('Грешен имейл или парола.');
+      else if (/already registered/i.test(msg)) setError('Този имейл вече е регистриран. Влезте.');
+      else setError(msg || 'Възникна грешка. Опитайте отново.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDemoFill = () => {
@@ -198,6 +240,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         ) : (
           <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            {error && (
+              <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.35)', color: '#fca5a5', fontSize: '0.82rem', padding: '0.6rem 0.9rem', borderRadius: '10px' }}>
+                {error}
+              </div>
+            )}
+            {info && (
+              <div style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.35)', color: '#6ee7b7', fontSize: '0.82rem', padding: '0.6rem 0.9rem', borderRadius: '10px' }}>
+                {info}
+              </div>
+            )}
             {mode === 'register' && (
               <>
                 {/* 2-Column Optimized Registration Fields */}
@@ -347,42 +399,48 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             <button
               type="submit"
+              disabled={loading}
               className="btn btn-primary"
               style={{
                 width: '100%',
                 padding: '0.75rem',
                 fontSize: '0.95rem',
                 marginTop: '0.3rem',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                opacity: loading ? 0.7 : 1
               }}
             >
-              {mode === 'login' ? 'Влез в Профила' : 'Създай Профил (14 Дни Безплатно)'} <ArrowRight size={16} />
+              {loading
+                ? 'Моля, изчакайте…'
+                : <>{mode === 'login' ? 'Влез в Профила' : 'Създай Профил (14 Дни Безплатно)'} <ArrowRight size={16} /></>}
             </button>
 
-            {/* DEMO QUICK AUTO-FILL BUTTON */}
-            <div style={{ textAlign: 'center', marginTop: '0.3rem' }}>
-              <button
-                type="button"
-                onClick={() => {
-                  handleDemoFill();
-                  setTimeout(() => {
-                    onSuccessLogin();
-                    onClose();
-                  }, 600);
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--accent-cyan)',
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  textDecoration: 'underline'
-                }}
-              >
-                ⚡ Бърз демо вход без парола за Управители
-              </button>
-            </div>
+            {/* DEMO QUICK AUTO-FILL BUTTON — only when no real backend is configured */}
+            {!isSupabaseEnabled && (
+              <div style={{ textAlign: 'center', marginTop: '0.3rem' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleDemoFill();
+                    setTimeout(() => {
+                      onSuccessLogin();
+                      onClose();
+                    }, 600);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--accent-cyan)',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    textDecoration: 'underline'
+                  }}
+                >
+                  ⚡ Бърз демо вход без парола за Управители
+                </button>
+              </div>
+            )}
 
             {/* Quick OAuth options */}
             <div style={{ marginTop: '0.6rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border-light)' }}>

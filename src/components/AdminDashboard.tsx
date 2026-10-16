@@ -1,5 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { getWaiters, getReviews, getOrders, getSubscription, addWaiter, updateWaiter, deleteWaiter, type Waiter, type Review } from '../utils/mockData';
+import {
+  listWaiters, listReviews, createWaiter, updateWaiterRow, deleteWaiterRow,
+  type Restaurant, type DashWaiter, type DashReview,
+} from '../lib/data';
 import { 
   CustomUsers as Users, 
   CustomStar as Star, 
@@ -33,13 +37,69 @@ import {
 
 interface AdminDashboardProps {
   onNavigateToCustomizer?: () => void;
+  /** When present, the dashboard shows this real restaurant's live data. */
+  restaurant?: Restaurant;
+  onSignOut?: () => void;
 }
 
-export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCustomizer }) => {
-  const [waiters, setWaiters] = useState<Waiter[]>(getWaiters());
-  const reviews = getReviews();
+/** Map a backend waiter + its reviews into the rich Waiter shape the UI uses. */
+function buildWaiter(w: DashWaiter, revs: DashReview[]): Waiter {
+  const mine = revs.filter((r) => r.waiterId === w.id);
+  const totalReviews = mine.length;
+  const totalTips = mine.reduce((s, r) => s + r.tipAmount, 0);
+  const rating = totalReviews
+    ? parseFloat((mine.reduce((s, r) => s + r.rating, 0) / totalReviews).toFixed(1))
+    : 0;
+  const avgTipPerBill = totalReviews ? parseFloat((totalTips / totalReviews).toFixed(2)) : 0;
+  const base = (import.meta.env.BASE_URL || '/');
+  const rateUrl = `${window.location.origin}${base}#rate/${w.slug}`;
+  return {
+    id: w.id,
+    name: w.name,
+    role: w.role,
+    rating,
+    totalReviews,
+    totalTips,
+    scanCount: 0,
+    googleRedirects: mine.filter((r) => r.isPublic).length,
+    shiftsCount: 0,
+    avgTipPerBill,
+    qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(rateUrl)}`,
+    avatar: w.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200',
+    topTags: [],
+  };
+}
+
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCustomizer, restaurant, onSignOut }) => {
+  const live = Boolean(restaurant);
+
+  const [waiters, setWaiters] = useState<Waiter[]>(live ? [] : getWaiters());
+  const [reviews, setReviews] = useState<Review[]>(live ? [] : getReviews());
   const orders = getOrders();
   const subscription = getSubscription();
+
+  // Load / reload the restaurant's live data.
+  const reloadLive = async () => {
+    if (!restaurant) return;
+    const [dw, dr] = await Promise.all([listWaiters(), listReviews()]);
+    const nameById = new Map(dw.map((w) => [w.id, w.name]));
+    setReviews(dr.map((r) => ({
+      id: r.id,
+      waiterId: r.waiterId,
+      waiterName: nameById.get(r.waiterId) || '',
+      rating: r.rating,
+      comment: r.comment || '',
+      tipAmount: r.tipAmount,
+      tags: r.tags,
+      createdAt: (r.createdAt || '').replace('T', ' ').substring(0, 16),
+    })));
+    setWaiters(dw.map((w) => buildWaiter(w, dr)));
+  };
+
+  useEffect(() => {
+    if (live) void reloadLive();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [restaurant?.id]);
 
   const [activeTab, setActiveTab] = useState<'analytics' | 'waiters' | 'reviews' | 'payouts' | 'google' | 'orders'>('analytics');
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | 'year'>('30d');
@@ -117,21 +177,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
     setShowWaiterModal(true);
   };
 
-  const handleSaveWaiter = (e: React.FormEvent) => {
+  const handleSaveWaiter = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formName.trim()) return;
 
-    if (editingWaiter) {
-      // Edit existing
-      const updated = updateWaiter({
-        ...editingWaiter,
-        name: formName,
-        role: formRole,
-        avatar: formAvatar || editingWaiter.avatar
-      });
+    if (live && restaurant) {
+      try {
+        if (editingWaiter) {
+          await updateWaiterRow(editingWaiter.id, { name: formName, role: formRole, avatarUrl: formAvatar || undefined });
+        } else {
+          await createWaiter(restaurant.id, { name: formName, role: formRole, avatarUrl: formAvatar || undefined });
+        }
+        await reloadLive();
+      } catch { /* keep modal open on failure */ return; }
+    } else if (editingWaiter) {
+      updateWaiter({ ...editingWaiter, name: formName, role: formRole, avatar: formAvatar || editingWaiter.avatar });
       setWaiters(getWaiters());
     } else {
-      // Add new
       addWaiter(formName, formRole, formAvatar);
       setWaiters(getWaiters());
     }
@@ -139,10 +201,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
     setShowWaiterModal(false);
   };
 
-  const handleDeleteWaiterConfirmed = () => {
+  const handleDeleteWaiterConfirmed = async () => {
     if (!deleteConfirmWaiter) return;
-    deleteWaiter(deleteConfirmWaiter.id);
-    setWaiters(getWaiters());
+    if (live) {
+      try {
+        await deleteWaiterRow(deleteConfirmWaiter.id);
+        await reloadLive();
+      } catch { return; }
+    } else {
+      deleteWaiter(deleteConfirmWaiter.id);
+      setWaiters(getWaiters());
+    }
     if (selectedWaiterDetails?.id === deleteConfirmWaiter.id) {
       setSelectedWaiterDetails(null);
     }
@@ -216,7 +285,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
             </span>
           </div>
           <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', fontWeight: 600 }}>
-            🏢 Ресторант Леденика (София)
+            🏢 {restaurant ? `${restaurant.name}${restaurant.city ? ` (${restaurant.city})` : ''}` : 'Ресторант Леденика (София)'}
           </span>
           <div style={{ 
             marginTop: '0.45rem', 
@@ -336,12 +405,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateToCust
           </div>
 
           {onNavigateToCustomizer && (
-            <button 
-              className="btn ios-glass-btn-primary" 
+            <button
+              className="btn ios-glass-btn-primary"
               style={{ width: '100%', fontSize: '0.8rem', padding: '0.6rem' }}
               onClick={onNavigateToCustomizer}
             >
               <Plus size={14} /> Поръчай Още Карти
+            </button>
+          )}
+
+          {onSignOut && (
+            <button
+              className="btn btn-secondary"
+              style={{ width: '100%', fontSize: '0.8rem', padding: '0.55rem', marginTop: '0.5rem' }}
+              onClick={onSignOut}
+            >
+              Изход от профила
             </button>
           )}
         </div>
