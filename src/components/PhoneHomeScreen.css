@@ -1,0 +1,253 @@
+/* ============================================================
+   HERO PHONE — HOME SCREEN (before the NFC tap)
+   Drawn at the frame's inner size (332×662) and zoomed down on
+   smaller phones via --home-zoom. The fade-out lives with the rest
+   of the tap timeline in index.css.
+   ============================================================ */
+.phone-home {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  overflow: hidden;
+  border-radius: inherit;
+  color: #fff;
+  font-family: var(--font-body);
+  text-align: left;
+  transform-origin: 50% 35%;
+  background:
+    radial-gradient(120% 70% at 12% 8%, rgba(124, 58, 237, 0.9) 0%, transparent 55%),
+    radial-gradient(90% 60% at 100% 45%, rgba(8, 145, 178, 0.75) 0%, transparent 60%),
+    radial-gradient(130% 75% at 25% 105%, rgba(79, 70, 229, 0.95) 0%, transparent 60%),
+    #0b0a1a;
+}
+
+.phone-home-inner {
+  display: flex;
+  flex-direction: column;
+  width: 332px;
+  height: 662px;
+  margin: 0 auto;
+  zoom: var(--home-zoom, 1);
+}
+
+/* ---- Status bar ---- */
+.ph-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 48px;
+  padding: 4px 28px 0 34px;
+  font-family: var(--font-headline);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ph-status-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.ph-battery {
+  position: relative;
+  width: 24px;
+  height: 12px;
+  padding: 1.5px;
+  border: 1.2px solid rgba(255, 255, 255, 0.55);
+  border-radius: 4px;
+}
+
+.ph-battery::before {
+  content: '';
+  display: block;
+  width: 85%;
+  height: 100%;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.ph-battery::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: -4px;
+  width: 2px;
+  height: 4px;
+  border-radius: 0 1px 1px 0;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* ---- Widgets ---- */
+.ph-widgets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 12px 22px 0;
+}
+
+.ph-widget {
+  display: flex;
+  flex-direction: column;
+  height: 138px;
+  padding: 12px 14px;
+  border-radius: 22px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+.ph-weather {
+  background: linear-gradient(180deg, #2b63d9 0%, #5aa0f2 100%);
+}
+
+.ph-w-city {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ph-w-temp {
+  font-size: 40px;
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -1px;
+}
+
+.ph-w-sun {
+  margin-top: auto;
+  margin-bottom: 2px;
+}
+
+.ph-w-desc {
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.ph-w-range {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.ph-calendar {
+  background: #fff;
+  color: #111;
+}
+
+.ph-c-day {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #ef4444;
+}
+
+.ph-c-num {
+  margin-top: 2px;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.ph-c-event {
+  margin-top: auto;
+  padding-left: 7px;
+  border-left: 3px solid #8b5cf6;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #555;
+}
+
+.ph-c-event strong {
+  display: block;
+  color: #111;
+}
+
+/* ---- App grid + dock ---- */
+.ph-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 16px;
+  padding: 22px 14px 0;
+}
+
+.ph-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.ph-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.18), 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.ph-icon--calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #111;
+  line-height: 1;
+}
+
+.ph-icon--calendar span {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ef4444;
+}
+
+.ph-icon--calendar b {
+  font-size: 26px;
+  font-weight: 400;
+}
+
+.ph-label {
+  font-size: 10.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.ph-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: auto;
+  padding-bottom: 12px;
+}
+
+.ph-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.ph-dots i.is-on {
+  background: #fff;
+}
+
+.ph-dock {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
+  margin: 0 12px;
+  padding: 13px 10px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+.ph-home-bar {
+  width: 120px;
+  height: 5px;
+  margin: 12px auto 9px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.85);
+}

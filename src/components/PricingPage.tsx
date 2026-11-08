@@ -6,6 +6,8 @@ import {
   CustomStar as Star
 } from './CustomIcons';
 import { IconEuroChip, IconNfcChip, IconCyberAnalytics, IconVipWaiters, IconSmartRadar } from './CustomIcons';
+import { PlanIncludes } from './PlanIncludes';
+import { Faq } from './Faq';
 
 interface PricingPageProps {
   onNavigateToCustomizer: () => void;
@@ -151,7 +153,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0, margin: '0 0 1.8rem', listStyle: 'none', fontSize: '0.88rem' }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle2 size={18} color="var(--green)" /> Стандартни иконки (без оскъпяване)</li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle2 size={18} color="var(--green)" /> Опция "Дизайн по ваш избор (+5€)"</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle2 size={18} color="var(--green)" /> Избор между Черен или Бял цвят</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle2 size={18} color="var(--green)" /> Бяло матово покритие или черно (+€3/бр.)</li>
             </ul>
 
             <button 
@@ -219,12 +221,14 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               ЧАСТ 2: СОФТУЕРЕН АБОНАМЕНТ
             </span>
             <h2 style={{ fontSize: '2.4rem', fontWeight: 900, fontFamily: 'var(--font-display)', margin: '0.3rem 0 0.5rem' }}>
-              Софтуер за Управители &amp; Мотиция на Екипа
+              Табло, известия и отчети за управителя
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.08rem' }}>
               Включва <strong>14 дни безплатен пробен период</strong>. Откажете по всяко време без неустойки.
             </p>
           </div>
+
+          <PlanIncludes />
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
             
@@ -254,9 +258,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', padding: 0, margin: '0 0 2rem', listStyle: 'none', fontSize: '0.92rem' }}>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> До 10 сервитьорски профила</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Базов контролен панел за управителя</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Филтър за Google Maps 5★ отзиви</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Онлайн бакшиши през Apple &amp; Google Pay</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Табло с оценки, фуния и класация на екипа</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Google отзиви с едно докосване</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Поддръжка по имейл</li>
                 </ul>
               </div>
 
@@ -300,10 +304,10 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                 </div>
 
                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', padding: 0, margin: '0 0 2rem', listStyle: 'none', fontSize: '0.92rem' }}>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Неограничен брой сервитьори</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Пълен одит &amp; класация по рейтинг</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Скрит админ чат за критичните отзиви</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Автоматични банкови изплащания</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Неограничен брой сервитьори и обекти</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Подробна статистика и експорт в Excel</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Общ преглед на всички обекти</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Карти с вашето лого и дизайн</li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckCircle2 size={20} color="var(--green)" /> Персонален акаунт мениджър</li>
                 </ul>
               </div>
@@ -322,39 +326,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         </div>
       </section>
 
-      {/* SECTION 3: FAQ FOR MANAGERS */}
-      <section style={{ maxWidth: '900px', margin: '0 auto', width: '100%', padding: '0 2vw' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'var(--font-display)' }}>
-            Често Задавани Въпроси от Управители
-          </h2>
+      {/* SECTION 3: FAQ */}
+      <section style={{ maxWidth: '900px', margin: '0 auto', width: '100%', padding: '0 2vw' }} id="pricing-faq">
+        <div className="section-head" style={{ marginBottom: '2rem' }}>
+          <span className="section-eyebrow">Въпроси и отговори</span>
+          <h2 className="section-title">Често задавани въпроси</h2>
         </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {[
-            {
-              q: 'Трябва ли сервитьорите да свалят апликация на телефоните си?',
-              a: 'Не! Системата е 100% уеб базирана. Сервитьорите и клиентите отварят профила веднага през браузър за под 1 секунда.'
-            },
-            {
-              q: 'Какво става, ако клиентът е недоволен от обслужването?',
-              a: 'Оценки от 1 до 3 звезди НЕ се публикуват в Google. Те се изпращат като скрит вътрешен отзив директно в контролния панел на управителя.'
-            },
-            {
-              q: 'Колко време отнема изработката на брандираните карти?',
-              a: 'Стандартният срок за изработка и доставка на индивидуално брандирани NFC карти в цяла България е 2 до 4 работни дни.'
-            }
-          ].map((faq, idx) => (
-            <div key={idx} className="glass-card" style={{ padding: '1.5rem 1.8rem', borderRadius: '18px' }}>
-              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.4rem', color: '#fff' }}>
-                {faq.q}
-              </h4>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
-                {faq.a}
-              </p>
-            </div>
-          ))}
-        </div>
+        <Faq />
       </section>
 
     </div>

@@ -1,20 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense, type ReactNode, type MouseEvent as ReactMouseEvent } from 'react';
 import { LandingPage } from './components/LandingPage';
-import { AdminDashboard } from './components/AdminDashboard';
-import { NfcCustomizer } from './components/NfcCustomizer';
 import { CustomerRating } from './components/CustomerRating';
-import { HowItWorks } from './components/HowItWorks';
-import { PricingPage } from './components/PricingPage';
 import { AuthModal } from './components/AuthModal';
-import { LegalPage } from './components/LegalPage';
-import { AboutPage } from './components/AboutPage';
-import { Onboarding } from './components/Onboarding';
-import { TipTapBrandSymbol, CustomCreditCard as CreditCard, CustomMenu as Menu, CustomX as X, CustomHeart as Heart } from './components/CustomIcons';
+
+// Loaded on demand so a guest scanning a card only downloads the rating page.
+const AdminDashboard = lazy(() => import('./components/AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
+const NfcCustomizer = lazy(() => import('./components/NfcCustomizer').then((m) => ({ default: m.NfcCustomizer })));
+const HowItWorks = lazy(() => import('./components/HowItWorks').then((m) => ({ default: m.HowItWorks })));
+const PricingPage = lazy(() => import('./components/PricingPage').then((m) => ({ default: m.PricingPage })));
+const LegalPage = lazy(() => import('./components/LegalPage').then((m) => ({ default: m.LegalPage })));
+const AboutPage = lazy(() => import('./components/AboutPage').then((m) => ({ default: m.AboutPage })));
+const Onboarding = lazy(() => import('./components/Onboarding').then((m) => ({ default: m.Onboarding })));
+import {
+  TipTapBrandSymbol,
+  CustomArrowRight as ArrowRight,
+  CustomBarChart3 as BarChart,
+  CustomChevronDown as ChevronDown,
+  CustomSmartphone as Smartphone,
+} from './components/CustomIcons';
 import { isSupabaseEnabled } from './lib/supabase';
 import { getSession, onAuthChange, getMyProfile, signOut, type MyProfile } from './lib/data';
 import type { Session } from '@supabase/supabase-js';
 
-type ViewState = 'landing' | 'dashboard' | 'customizer' | 'rate' | 'howitworks' | 'pricing' | 'legal' | 'about';
+// `demo` / `demoguest` always run on local sample data so the marketing
+// demos work with or without a backend; `dashboard` / `rate` are the real app.
+type ViewState = 'landing' | 'dashboard' | 'customizer' | 'rate' | 'howitworks' | 'pricing' | 'legal' | 'about' | 'demo' | 'demoguest';
 type LegalTab = 'terms' | 'privacy' | 'cookies' | 'withdrawal' | 'imprint';
 
 function App() {
@@ -61,6 +71,10 @@ function App() {
         setView('rate');
       } else if (hash === '#dashboard') {
         setView('dashboard');
+      } else if (hash === '#demo') {
+        setView('demo');
+      } else if (hash === '#demo-guest') {
+        setView('demoguest');
       } else if (hash === '#customizer') {
         setView('customizer');
       } else if (hash === '#how-it-works') {
@@ -102,7 +116,9 @@ function App() {
     else if (newView === 'howitworks') window.location.hash = 'how-it-works';
     else if (newView === 'pricing') window.location.hash = 'pricing';
     else if (newView === 'about') window.location.hash = 'about';
-    else if (newView === 'rate') window.location.hash = 'rate/waiter-2';
+    else if (newView === 'rate') window.location.hash = `rate/${rateSlug}`;
+    else if (newView === 'demo') window.location.hash = 'demo';
+    else if (newView === 'demoguest') window.location.hash = 'demo-guest';
     else if (newView === 'legal') window.location.hash = `legal/${legalTab}`;
     
     // Scroll to top
@@ -115,6 +131,18 @@ function App() {
     setMobileMenuOpen(false);
     window.location.hash = `legal/${tab}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  /** Jump to a landing-page section; for a FAQ entry, also open its answer. */
+  const navigateToSection = (sectionId: string, faqId?: string) => {
+    setView('landing');
+    setMobileMenuOpen(false);
+    window.location.hash = '';
+    setTimeout(() => {
+      const target = document.getElementById(faqId ? `faq-${faqId}` : sectionId);
+      if (target instanceof HTMLDetailsElement) target.open = true;
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
   };
 
   const navigateToAboutContact = () => {
@@ -133,188 +161,234 @@ function App() {
     setMobileMenuOpen(false);
   };
 
+  // Navbar: denser glass once the page scrolls + the desktop "Демо" dropdown.
+  const [scrolled, setScrolled] = useState(false);
+  const [demoMenuOpen, setDemoMenuOpen] = useState(false);
+  const demoRef = useRef<HTMLDivElement>(null);
+  const demoCloseTimer = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen && !demoMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileMenuOpen(false);
+        setDemoMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileMenuOpen, demoMenuOpen]);
+
+  useEffect(() => {
+    if (!demoMenuOpen) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!demoRef.current?.contains(e.target as Node)) setDemoMenuOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [demoMenuOpen]);
+
+  const openDemoMenu = () => {
+    window.clearTimeout(demoCloseTimer.current);
+    setDemoMenuOpen(true);
+  };
+
+  const closeDemoMenuSoon = () => {
+    window.clearTimeout(demoCloseTimer.current);
+    demoCloseTimer.current = window.setTimeout(() => setDemoMenuOpen(false), 140);
+  };
+
+  const navLinks: { view: ViewState; label: string; href: string }[] = [
+    { view: 'howitworks', label: 'Как работи', href: '#how-it-works' },
+    { view: 'pricing', label: 'Цени', href: '#pricing' },
+    { view: 'customizer', label: 'Конфигуратор', href: '#customizer' },
+  ];
+
+  const demoLinks: { view: ViewState; label: string; text: string; href: string; icon: ReactNode }[] = [
+    { view: 'demoguest', label: 'Изглед за госта', text: 'Как гостът оценява и оставя бакшиш', href: '#demo-guest', icon: <Smartphone size={18} color="#c4b5fd" /> },
+    { view: 'demo', label: 'Табло за управители', text: 'Оценки, бакшиши и екип на едно място', href: '#demo', icon: <BarChart size={18} color="#c4b5fd" /> },
+  ];
+
+  const isDemoView = view === 'demo' || view === 'demoguest';
+
+  // Real <a href> links (keyboard, middle-click) that still route in-app.
+  const go = (target: ViewState) => (e: ReactMouseEvent) => {
+    e.preventDefault();
+    setDemoMenuOpen(false);
+    navigateTo(target);
+  };
+
   return (
     <div className="app-container">
-      {/* HEADER NAVBAR (NEXT-GEN FLOATING ISLAND GLASS WITH TIPTAP LOGO) */}
-      <div className="navbar-wrapper">
-        <header className="floating-island-navbar">
-          {/* Pure Brand Vector Symbol (No background box - like top tech brands) */}
-          <div 
-            style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', cursor: 'pointer' }}
-            onClick={() => navigateTo('landing')}
-          >
-            <TipTapBrandSymbol size={32} />
-            <span style={{ 
-              fontFamily: 'var(--font-brand)', 
-              fontSize: '1.18rem', 
-              fontWeight: 800, 
-              letterSpacing: '-0.5px',
-              background: 'linear-gradient(135deg, #ffffff 0%, #c4b5fd 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}>
-              Tip<span style={{ 
-                background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}>Tap</span>
-            </span>
-          </div>
+      {/* NAVBAR — floating glass bar: brand · centered links · actions */}
+      <div className={`navbar-wrapper${scrolled ? ' is-scrolled' : ''}`}>
+        <header className="site-nav">
+          <a href="#" className="site-nav-brand" aria-label="TipTap — начало" onClick={go('landing')}>
+            <TipTapBrandSymbol size={30} />
+            <span className="site-nav-wordmark">Tip<span>Tap</span></span>
+          </a>
 
-          {/* Desktop Navigation Pills */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }} className="desktop-nav">
-            <span 
-              className={`nav-pill-item ${view === 'landing' ? 'active' : ''}`}
-              onClick={() => navigateTo('landing')}
+          <nav className="site-nav-links" aria-label="Основна навигация">
+            {navLinks.map((link) => (
+              <a
+                key={link.view}
+                href={link.href}
+                className={`site-nav-link${view === link.view ? ' is-active' : ''}`}
+                aria-current={view === link.view ? 'page' : undefined}
+                onClick={go(link.view)}
+              >
+                {link.label}
+              </a>
+            ))}
+
+            <div
+              ref={demoRef}
+              className="site-nav-dropdown"
+              onMouseEnter={openDemoMenu}
+              onMouseLeave={closeDemoMenuSoon}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDemoMenuOpen(false);
+              }}
             >
-              Начало
-            </span>
-            <span 
-              className={`nav-pill-item ${view === 'howitworks' ? 'active' : ''}`}
-              onClick={() => navigateTo('howitworks')}
+              <button
+                type="button"
+                className={`site-nav-link${isDemoView ? ' is-active' : ''}`}
+                aria-expanded={demoMenuOpen}
+                aria-haspopup="true"
+                // A mouse click only opens (hover already may have); keyboard toggles.
+                onClick={(e) => setDemoMenuOpen((open) => (e.detail === 0 ? !open : true))}
+              >
+                Демо <ChevronDown size={14} className="site-nav-chevron" />
+              </button>
+              <div className={`site-nav-menu${demoMenuOpen ? ' is-open' : ''}`}>
+                {demoLinks.map((item) => (
+                  <a
+                    key={item.view}
+                    href={item.href}
+                    className={`site-nav-menu-item${view === item.view ? ' is-active' : ''}`}
+                    onClick={go(item.view)}
+                  >
+                    <span className="site-nav-menu-icon">{item.icon}</span>
+                    <span>
+                      <span className="site-nav-menu-title">{item.label}</span>
+                      <span className="site-nav-menu-text">{item.text}</span>
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <a
+              href="#about"
+              className={`site-nav-link${view === 'about' ? ' is-active' : ''}`}
+              aria-current={view === 'about' ? 'page' : undefined}
+              onClick={go('about')}
             >
-              Как Работи
-            </span>
-            <span 
-              className={`nav-pill-item ${view === 'pricing' ? 'active' : ''}`}
-              onClick={() => navigateTo('pricing')}
-            >
-              Цени
-            </span>
-            <span 
-              className={`nav-pill-item ${view === 'customizer' ? 'active' : ''}`}
-              onClick={() => navigateTo('customizer')}
-            >
-              Конфигуратор
-            </span>
-            <span 
-              className={`nav-pill-item ${view === 'rate' ? 'active' : ''}`}
-              onClick={() => navigateTo('rate')}
-            >
-              Клиентски Изглед
-            </span>
-            <span 
-              className={`nav-pill-item ${view === 'dashboard' ? 'active' : ''}`}
-              onClick={() => navigateTo('dashboard')}
-            >
-              Демо за Управители
-            </span>
+              За нас
+            </a>
           </nav>
 
-          {/* Right Action Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <button 
-              className="nav-super-cool-auth-btn" 
-              onClick={() => openAuth('login')}
-            >
-              Вход / Регистрация
+          <div className="site-nav-actions">
+            <button type="button" className="site-nav-login" onClick={() => openAuth('login')}>
+              Вход
             </button>
-            <button 
-              className="btn ios-glass-btn-primary" 
-              style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem' }}
-              onClick={() => navigateTo('customizer')}
-            >
-              Поръчай карти
+            <button type="button" className="site-nav-cta" onClick={() => navigateTo('customizer')}>
+              Поръчайте карти
             </button>
-            <button 
-              className="mobile-menu-btn" 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'none' }}
+            <button
+              type="button"
+              className={`site-nav-burger${mobileMenuOpen ? ' is-open' : ''}`}
+              aria-label={mobileMenuOpen ? 'Затвори менюто' : 'Отвори менюто'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav"
+              onClick={() => setMobileMenuOpen((open) => !open)}
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <span />
+              <span />
             </button>
           </div>
         </header>
       </div>
 
-      {/* Mobile Navigation Dropdown */}
-      {mobileMenuOpen && (
-        <div style={{
-          position: 'fixed',
-          top: '70px',
-          left: 0,
-          right: 0,
-          background: 'rgba(14, 14, 26, 0.95)',
-          backdropFilter: 'blur(20px)',
-          padding: '1.5rem 2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-          zIndex: 99,
-          borderBottom: '1px solid var(--border-light)'
-        }}>
-          <span 
-            style={{ fontSize: '1.1rem', color: view === 'landing' ? 'var(--accent-purple)' : '#fff', fontWeight: 600 }}
-            onClick={() => navigateTo('landing')}
-          >
-            Начало
-          </span>
-          <span 
-            style={{ fontSize: '1.1rem', color: view === 'howitworks' ? 'var(--accent-purple)' : '#fff', fontWeight: 600 }}
-            onClick={() => navigateTo('howitworks')}
-          >
-            Как Работи
-          </span>
-          <span 
-            style={{ fontSize: '1.1rem', color: view === 'pricing' ? 'var(--accent-purple)' : '#fff', fontWeight: 600 }}
-            onClick={() => navigateTo('pricing')}
-          >
-            Цени
-          </span>
-          <span 
-            style={{ fontSize: '1.1rem', color: view === 'customizer' ? 'var(--accent-purple)' : '#fff', fontWeight: 600 }}
-            onClick={() => navigateTo('customizer')}
-          >
-            Конфигуратор
-          </span>
-          <span 
-            style={{ fontSize: '1.1rem', color: view === 'rate' ? 'var(--accent-purple)' : '#fff', fontWeight: 600 }}
-            onClick={() => navigateTo('rate')}
-          >
-            Клиентски Изглед (Демо)
-          </span>
-          <span
-            style={{ fontSize: '1.1rem', color: view === 'dashboard' ? 'var(--accent-purple)' : '#fff', fontWeight: 600 }}
-            onClick={() => navigateTo('dashboard')}
-          >
-            Демо за Управители
-          </span>
-          <span
-            style={{ fontSize: '1.1rem', color: view === 'about' ? 'var(--accent-purple)' : '#fff', fontWeight: 600 }}
-            onClick={() => navigateTo('about')}
-          >
-            За нас
-          </span>
-          <span
-            style={{ fontSize: '1.1rem', color: '#f59e0b', fontWeight: 700 }}
-            onClick={() => openAuth('login')}
-          >
-            Вход / Регистрация
-          </span>
-        </div>
-      )}
+      {/* MOBILE MENU — sheet under the bar (≤ 900px) */}
+      <div id="mobile-nav" className={`mobile-nav${mobileMenuOpen ? ' is-open' : ''}`}>
+        <div className="mobile-nav-backdrop" onClick={() => setMobileMenuOpen(false)} />
+        <nav className="mobile-nav-panel" aria-label="Мобилна навигация">
+          {[...navLinks, { view: 'about' as ViewState, label: 'За нас', href: '#about' }].map((link) => (
+            <a
+              key={link.view}
+              href={link.href}
+              className={`mobile-nav-link${view === link.view ? ' is-active' : ''}`}
+              aria-current={view === link.view ? 'page' : undefined}
+              onClick={go(link.view)}
+            >
+              {link.label}
+              <ChevronDown size={16} className="mobile-nav-arrow" />
+            </a>
+          ))}
+
+          <span className="mobile-nav-label">Демо</span>
+          {demoLinks.map((item) => (
+            <a
+              key={item.view}
+              href={item.href}
+              className={`mobile-nav-demo${view === item.view ? ' is-active' : ''}`}
+              onClick={go(item.view)}
+            >
+              <span className="site-nav-menu-icon">{item.icon}</span>
+              <span>
+                <span className="site-nav-menu-title">{item.label}</span>
+                <span className="site-nav-menu-text">{item.text}</span>
+              </span>
+            </a>
+          ))}
+
+          <div className="mobile-nav-actions">
+            <button type="button" className="hero-cta hero-cta--secondary" onClick={() => openAuth('login')}>
+              Вход
+            </button>
+            <button type="button" className="hero-cta hero-cta--primary" onClick={() => navigateTo('customizer')}>
+              Поръчайте карти <ArrowRight size={18} />
+            </button>
+          </div>
+        </nav>
+      </div>
 
       {/* MAIN VIEW ROUTER */}
       <main style={{ width: '100%' }}>
+        <Suspense fallback={<div style={{ minHeight: '60vh', display: 'grid', placeItems: 'center', color: 'var(--text-secondary)' }}>Зареждане…</div>}>
         {view === 'landing' && (
-          <LandingPage 
-            onNavigateToDashboard={() => navigateTo('dashboard')}
+          <LandingPage
+            onNavigateToDashboard={() => navigateTo('demo')}
             onNavigateToCustomizer={() => navigateTo('customizer')}
           />
         )}
 
         {view === 'howitworks' && (
-          <HowItWorks 
+          <HowItWorks
             onNavigateToCustomizer={() => navigateTo('customizer')}
-            onNavigateToDashboard={() => navigateTo('dashboard')}
+            onNavigateToDashboard={() => navigateTo('demo')}
           />
         )}
 
         {view === 'pricing' && (
-          <PricingPage 
+          <PricingPage
             onNavigateToCustomizer={() => navigateTo('customizer')}
-            onNavigateToDashboard={() => navigateTo('dashboard')}
+            onNavigateToDashboard={() => navigateTo('demo')}
           />
+        )}
+
+        {view === 'demo' && (
+          <div className="section-alt-indigo" style={{ padding: '3rem 4vw 4rem', width: '100%' }}>
+            <AdminDashboard onNavigateToCustomizer={() => navigateTo('customizer')} />
+          </div>
         )}
 
         {view === 'customizer' && (
@@ -351,8 +425,8 @@ function App() {
           </div>
         )}
 
-        {view === 'rate' && (
-          <div style={{ 
+        {(view === 'rate' || view === 'demoguest') && (
+          <div style={{
             minHeight: '85vh', 
             display: 'flex', 
             alignItems: 'center', 
@@ -368,7 +442,9 @@ function App() {
               boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
               overflow: 'hidden'
             }}>
-              <CustomerRating initialWaiterId={rateSlug} />
+              {view === 'demoguest'
+                ? <CustomerRating key="demo" demo initialWaiterId="waiter-2" />
+                : <CustomerRating key={rateSlug} initialWaiterId={rateSlug} />}
             </div>
           </div>
         )}
@@ -380,6 +456,7 @@ function App() {
         {view === 'legal' && (
           <LegalPage initialTab={legalTab} />
         )}
+        </Suspense>
       </main>
 
       {/* FOOTER */}
@@ -412,22 +489,22 @@ function App() {
           </div>
 
           <div>
-            <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem' }}>Често Задавани Въпроси</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              <span>• Как работи NFC технологията?</span>
-              <span>• Нужна ли е апликация за клиента?</span>
-              <span>• Как се превеждат бакшишите?</span>
-              <span>• Как се интегрира Google Maps?</span>
+            <h4 className="footer-title">Въпроси и отговори</h4>
+            <div className="footer-links">
+              <button type="button" onClick={() => navigateToSection('faq', 'app')}>Трябва ли приложение на госта?</button>
+              <button type="button" onClick={() => navigateToSection('faq', 'tips')}>Как работят бакшишите?</button>
+              <button type="button" onClick={() => navigateToSection('faq', 'alerts')}>Как разбирам за недоволен гост?</button>
+              <button type="button" onClick={() => navigateToSection('faq')}>Всички въпроси →</button>
             </div>
           </div>
 
           <div>
-            <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem' }}>За Ресторанти</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              <span style={{ cursor: 'pointer' }} onClick={() => navigateTo('customizer')}>Поръчка на брандирани карти</span>
-              <span style={{ cursor: 'pointer' }} onClick={() => navigateTo('customizer')}>Поръчка на табелки за маси</span>
-              <span style={{ cursor: 'pointer' }} onClick={() => navigateTo('dashboard')}>Управление на сервитьори</span>
-              <span style={{ cursor: 'pointer' }} onClick={() => navigateTo('about')}>За нас</span>
+            <h4 className="footer-title">За ресторанти</h4>
+            <div className="footer-links">
+              <button type="button" onClick={() => navigateToSection('features')}>Функции</button>
+              <button type="button" onClick={() => navigateTo('customizer')}>Поръчка на карти и табелки</button>
+              <button type="button" onClick={() => navigateTo('demo')}>Демо табло за управители</button>
+              <button type="button" onClick={() => navigateTo('about')}>За нас</button>
             </div>
           </div>
 

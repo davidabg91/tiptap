@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
 import { CustomerRating } from './CustomerRating';
-import { 
-  CustomArrowRight as ArrowRight, 
-  CustomStar as Star, 
-  CustomCreditCard as CreditCard, 
-  CustomDollarSign as DollarSign, 
-  CustomTrendingUp as TrendingUp, 
-  CustomCheckCircle as CheckCircle, 
-  CustomShieldCheck as ShieldCheck, 
-  CustomSmartphone as Smartphone,
-  CustomAward as Award,
-  CustomBarChart3 as BarChart3, 
-  CustomMessageSquare as MessageSquare, 
-  CustomChevronDown as ChevronDown
-} from './CustomIcons';
-import { 
-  IconNfcChip, IconVipWaiters, IconEuroChip,
-  IconSmartRadar, IconCyberQr, IconPrismStar,
+import { FeatureBento } from './FeatureBento';
+import { PlanIncludes } from './PlanIncludes';
+import { Faq } from './Faq';
+import { PhoneHomeScreen, BrowserGlyph } from './PhoneHomeScreen';
+import {
+  CustomArrowRight as ArrowRight,
+  CustomCheckCircle as CheckCircle,
   IconHandChart, IconHandShieldStar, IconHandTipCard
 } from './CustomIcons';
 
@@ -30,11 +20,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onNavigateToCustomizer 
 }) => {
   const [demoReviewCount, setDemoReviewCount] = useState<number>(4);
-
-  // ROI Calculator State
-  const [tablesCount, setTablesCount] = useState<number>(20);
-  const [turnsPerTable, setTurnsPerTable] = useState<number>(4);
-  const [avgTipPerCheck, setAvgTipPerCheck] = useState<number>(3);
 
   // 3D Card Tilt State for Showcase
   const [cardRotateX, setCardRotateX] = useState<number>(0);
@@ -54,87 +39,79 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     setCardRotateY(0);
   };
 
-  // 100% Transparent Logical ROI Formulas
-  const dailyChecks = tablesCount * turnsPerTable;
-  const monthlyChecks = dailyChecks * 30;
-  // 30% of tables leave an online tip averaging avgTipPerCheck
-  const estimatedMonthlyTips = Math.round(monthlyChecks * 0.30 * avgTipPerCheck);
-  // 8% of happy guests leave a 5-star Google Review
-  const estimatedMonthlyReviews = Math.round(monthlyChecks * 0.08);
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       
       {/* SECTION 1: HERO SECTION (TONE 1: MIDNIGHT TITANIUM) */}
-      <section className="section-alt-dark hero-grid-pattern" style={{ padding: '4rem 4vw 5rem' }}>
-        <div className="mobile-stack" style={{
-          position: 'relative',
-          maxWidth: '1400px',
-          margin: '0 auto',
-          width: '100%',
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 0.8fr',
-          gap: '4vw',
-          alignItems: 'center'
-        }}>
+      <section className="section-alt-dark hero-grid-pattern hero-section">
+        <div className="mobile-stack hero-grid">
           
           {/* Glow Effects */}
           <div className="bg-glow-purple" style={{ top: '-10%', left: '-5%', opacity: 0.35 }}></div>
           <div className="bg-glow-cyan" style={{ bottom: '0%', right: '10%', opacity: 0.25 }}></div>
 
           {/* Hero Left Content */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', zIndex: 1, alignItems: 'center', textAlign: 'center' }}>
-            
-            <h1 className="hero-display-title">
-              Вижте в реално време как <br />
-              работи вашият персонал.
+          <div className="hero-copy">
+            <span className="hero-eyebrow">
+              <span className="hero-eyebrow-dot" />
+              NFC карти за оценки и бакшиши
+            </span>
+
+            <h1 className="hero-headline">
+              Вижте в реално време <br className="hero-br" />
+              как работи <br className="hero-br" />
+              <span className="hero-headline-accent">вашият персонал.</span>
             </h1>
 
-            <p className="font-casual-friendly" style={{ maxWidth: '680px', margin: '0 auto' }}>
-              <strong>TipTap</strong> дава на управителите и собствениците 100% прозрачност за качеството на сервиза през преките отзиви на вашите гости. Оценете представянето на всеки сервитьор, контролирайте репутацията на заведението и мотивирайте екипа.
+            <p className="hero-lead">
+              Гостите оценяват обслужването с едно докосване на NFC карта — без приложение.
+              Вие виждате представянето на всеки сервитьор, реагирате навреме на недоволството
+              и мотивирате екипа.
             </p>
 
-            {/* 3 Real Problem-Solving Benefit Pills (Manager-Centric Order) */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', width: '100%', maxWidth: '720px', margin: '0.5rem 0' }}>
-              <div className="glow-border-card" style={{ padding: '1.15rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
-                <IconHandChart size={30} color="#a78bfa" />
-                <div style={{ color: '#3b82f6', fontWeight: 800, fontSize: '0.95rem' }}>Контрол за Шефа</div>
-                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Реална оценка и анализи за всеки сервитьор</p>
-              </div>
-
-              <div className="glow-border-card" style={{ padding: '1.15rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
-                <IconHandShieldStar size={30} color="#a78bfa" />
-                <div style={{ color: 'var(--gold)', fontWeight: 800, fontSize: '0.95rem' }}>Защита &amp; Google 5★</div>
-                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Скрит админ чат за лошите отзиви &amp; Google 5★</p>
-              </div>
-
-              <div className="glow-border-card" style={{ padding: '1.15rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
-                <IconHandTipCard size={30} color="#a78bfa" />
-                <div style={{ color: 'var(--green)', fontWeight: 800, fontSize: '0.95rem' }}>Мотивация за Екипа</div>
-                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Онлайн бакшиши &amp; Бонус система за сервиза</p>
-              </div>
+            <div className="hero-actions">
+              <button className="hero-cta hero-cta--primary" onClick={onNavigateToCustomizer}>
+                Поръчайте NFC карти
+                <ArrowRight size={18} className="hero-cta-arrow" />
+              </button>
+              <button className="hero-cta hero-cta--secondary" onClick={onNavigateToDashboard}>
+                Вижте демото
+              </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem', width: '100%', justifyContent: 'center' }}>
-              <button 
-                className="btn ios-glass-btn-primary" 
-                style={{ padding: '1.05rem 2.4rem', fontSize: '1.05rem' }}
-                onClick={onNavigateToCustomizer}
-              >
-                Поръчай карти за твоя обект <ArrowRight size={18} />
-              </button>
-              <button 
-                className="btn ios-glass-btn-secondary"
-                style={{ padding: '1.05rem 2.4rem', fontSize: '1.05rem' }}
-                onClick={onNavigateToDashboard}
-              >
-                Демо за Управители
-              </button>
+            <ul className="hero-trust">
+              <li><CheckCircle size={16} color="#a78bfa" /> Без приложение за госта</li>
+              <li><CheckCircle size={16} color="#a78bfa" /> iPhone и Android</li>
+              <li><CheckCircle size={16} color="#a78bfa" /> Без обвързващ договор</li>
+            </ul>
+
+            <div className="hero-features">
+              <div className="hero-feature">
+                <span className="hero-feature-icon"><IconHandShieldStar size={22} color="#c4b5fd" /></span>
+                <div>
+                  <span className="hero-feature-title">Известие при 1–2★</span>
+                  <span className="hero-feature-text">В Telegram или по имейл, докато гостът е още на масата</span>
+                </div>
+              </div>
+              <div className="hero-feature">
+                <span className="hero-feature-icon"><IconHandTipCard size={22} color="#c4b5fd" /></span>
+                <div>
+                  <span className="hero-feature-title">Бакшиш без посредник</span>
+                  <span className="hero-feature-text">Директно по сметката на сервитьора, 0% комисиона</span>
+                </div>
+              </div>
+              <div className="hero-feature">
+                <span className="hero-feature-icon"><IconHandChart size={22} color="#c4b5fd" /></span>
+                <div>
+                  <span className="hero-feature-title">Пълна картина</span>
+                  <span className="hero-feature-text">Сканирания, оценки и класация на екипа в реално време</span>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Hero Right Content: 3D NFC Scan Animation Stage */}
-          <div style={{ display: 'flex', justifyContent: 'center', zIndex: 1, position: 'relative' }}>
+          <div className="hero-visual">
 
             {/* SMARTPHONE FRAME — zIndex above card */}
             <div className="floating-phone-container" style={{ position: 'relative', zIndex: 2 }}>
@@ -143,101 +120,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <span>Пробвай ме!</span>
               </div>
 
-              {/* 3D NFC card sweep stage — card flies from right, scans phone, exits left */}
-              <div className="nfc-scan-stage">
-                {/* NFC Radar Pulse Wave Rings behind phone */}
-                <div className="nfc-radar-pulse" />
-
-                <div className="nfc-card-3d realistic-restaurant-card">
-                  {/* Holographic Sheen Layer */}
-                  <div className="card-holographic-sheen" />
-
-                  {/* Metallic Chamfered Gold Border Inner Accent */}
-                  <div className="card-gold-inner-border" />
-
-                  {/* TOP ROW: Restaurant Logo & Name + EMV Smart Chip */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 2 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <img 
-                        src={`${import.meta.env.BASE_URL}logo.jpg`} 
-                        alt="Ресторант Леденика Logo" 
-                        style={{ 
-                          width: '32px', 
-                          height: '32px', 
-                          borderRadius: '8px', 
-                          border: '1.5px solid #f59e0b',
-                          boxShadow: '0 4px 12px rgba(245, 158, 11, 0.4)',
-                          objectFit: 'cover'
-                        }} 
-                      />
-                      <div>
-                        <div style={{ fontSize: '0.52rem', color: '#f59e0b', fontWeight: 800, letterSpacing: '1.2px', textTransform: 'uppercase', lineHeight: 1 }}>
-                          РЕСТОРАНТ
-                        </div>
-                        <div style={{ fontSize: '0.85rem', color: '#ffffff', fontWeight: 900, letterSpacing: '0.5px', fontFamily: 'var(--font-display)', lineHeight: 1.2 }}>
-                          Леденика
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Contactless NFC Waves Badge */}
-                    <div style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '4px',
-                      padding: '0.2rem 0.5rem',
-                      background: 'rgba(245, 158, 11, 0.12)',
-                      border: '1px solid rgba(245, 158, 11, 0.35)',
-                      borderRadius: '99px'
-                    }}>
-                      <span style={{ fontSize: '0.45rem', fontWeight: 900, color: '#f59e0b', letterSpacing: '0.8px' }}>NFC PASS</span>
-                    </div>
+              {/* NFC tap — the real printed card slips behind the phone and taps its antenna */}
+              <div className="tap-stage" aria-hidden="true">
+                <div className="tap-card">
+                  <div className="tap-card-edge" />
+                  <div className="tap-card-edge tap-card-edge--mid" />
+                  <div
+                    className="tap-card-face"
+                    style={{ backgroundImage: `url(${import.meta.env.BASE_URL}card-front-hero.webp)` }}
+                  >
+                    <span className="tap-card-sheen" />
                   </div>
-
-                  {/* CENTER ROW: Card Title / Call to Action */}
-                  <div style={{ margin: '8px 0 6px', textTransform: 'uppercase', zIndex: 2 }}>
-                    <div style={{ 
-                      fontSize: '0.92rem', 
-                      fontWeight: 900, 
-                      letterSpacing: '1.5px',
-                      background: 'linear-gradient(135deg, #fff 0%, #fbbf24 60%, #d97706 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))',
-                      lineHeight: 1.1
-                    }}>
-                      ОЦЕНИ ОБСЛУЖВАНЕТО
-                    </div>
-                    <div style={{ 
-                      fontSize: '0.52rem', 
-                      color: 'rgba(255,255,255,0.7)', 
-                      letterSpacing: '0.8px', 
-                      marginTop: '3px',
-                      fontWeight: 600
-                    }}>
-                      NFC SMART TOUCH CARD
-                    </div>
-                  </div>
-
-                  {/* BOTTOM ROW: Serial & Contactless Waves + TipTap Badge */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', zIndex: 2 }}>
-                    <div>
-                      <div style={{ fontSize: '0.48rem', color: 'rgba(245, 158, 11, 0.9)', letterSpacing: '1px', fontFamily: 'monospace', fontWeight: 700 }}>
-                        CARD ID: LED-2026-NFC
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      {/* Contactless Wave Icon */}
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M4 12C4 12 7 6 12 6C17 6 20 12 20 12" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M7 12C7 12 9 8 12 8C15 8 17 12 17 12" stroke="#ffffff" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M10 12C10 12 11 10 12 10C13 10 14 12 14 12" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round"/>
-                        <circle cx="12" cy="12" r="1.5" fill="#f59e0b"/>
-                      </svg>
-                      <span style={{ fontSize: '0.52rem', color: 'rgba(255,255,255,0.6)', fontWeight: 800 }}>TipTap</span>
-                    </div>
-                  </div>
+                </div>
+                {/* NFC field — drawn over the card so it reads as light */}
+                <div className="tap-field">
+                  <span className="tap-ring" />
+                  <span className="tap-ring" />
+                  <span className="tap-ring" />
                 </div>
               </div>
 
@@ -246,27 +145,64 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <div className="dynamic-island">
                   <div className="dynamic-island-camera"></div>
                   <div className="dynamic-island-sensor"></div>
-                </div>
-
-                <div style={{
-                  display: 'flex', justifyContent: 'space-between',
-                  padding: '0.65rem 1.6rem 0.2rem',
-                  fontSize: '0.7rem', fontWeight: 'bold',
-                  color: 'var(--text-muted)', zIndex: 9, marginTop: '0.2rem'
-                }}>
-                  <span>09:41</span>
-                  <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
-                    <span>5G</span>
-                    <span style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.1)', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>100%</span>
+                  <div className="island-live" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M8.5 8.5a5 5 0 0 1 0 7" stroke="#c4b5fd" strokeWidth="2.2" strokeLinecap="round" />
+                      <path d="M12 5.5a9.5 9.5 0 0 1 0 13" stroke="#a78bfa" strokeWidth="2.2" strokeLinecap="round" />
+                      <path d="M15.5 3a13.5 13.5 0 0 1 0 18" stroke="#8b5cf6" strokeWidth="2.2" strokeLinecap="round" />
+                      <circle cx="5" cy="12" r="1.6" fill="#c4b5fd" />
+                    </svg>
+                    <svg className="island-check" width="17" height="17" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="11" fill="#22c55e" />
+                      <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                   </div>
                 </div>
 
-                <div style={{ flex: 1, overflowY: 'auto', paddingTop: '0.5rem', position: 'relative' }} className="phone-screen">
-                  <CustomerRating
-                    demo
-                    initialWaiterId="waiter-2"
-                    onReviewSubmitted={() => setDemoReviewCount(demoReviewCount + 1)}
-                  />
+                {/* Before the tap the guest is on the home screen */}
+                <PhoneHomeScreen />
+
+                <div className="tap-screen-glow" aria-hidden="true" />
+                {/* What the phone shows when it reads the card: open the link in the browser */}
+                <div className="tap-banner" aria-hidden="true">
+                  <span className="tap-banner-icon"><BrowserGlyph /></span>
+                  <div className="tap-banner-body">
+                    <div className="tap-banner-meta"><span>NFC етикет</span><span>сега</span></div>
+                    <strong>Отворете tiptap.bg</strong>
+                    <span className="tap-banner-sub">Оценете обслужването · Мария Г.</span>
+                  </div>
+                </div>
+                <span className="tap-touch" aria-hidden="true" />
+
+                {/* The rating page, opened in the browser — no app needed */}
+                <div className="phone-app">
+                  <div style={{
+                    display: 'flex', justifyContent: 'space-between',
+                    padding: '0.65rem 1.6rem 0.2rem',
+                    fontSize: '0.7rem', fontWeight: 'bold',
+                    color: 'var(--text-muted)', zIndex: 9, marginTop: '0.2rem'
+                  }}>
+                    <span>09:41</span>
+                    <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
+                      <span>5G</span>
+                      <span style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.1)', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>100%</span>
+                    </div>
+                  </div>
+
+                  <div className="phone-url" aria-hidden="true">
+                    <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor">
+                      <path d="M2 5V3.5a3 3 0 0 1 6 0V5h.5A1.5 1.5 0 0 1 10 6.5v4A1.5 1.5 0 0 1 8.5 12h-7A1.5 1.5 0 0 1 0 10.5v-4A1.5 1.5 0 0 1 1.5 5zm1.5 0h3V3.5a1.5 1.5 0 0 0-3 0z" />
+                    </svg>
+                    tiptap.bg
+                  </div>
+
+                  <div style={{ flex: 1, overflowY: 'auto', paddingTop: '0.5rem', position: 'relative' }} className="phone-screen">
+                    <CustomerRating
+                      demo
+                      initialWaiterId="waiter-2"
+                      onReviewSubmitted={() => setDemoReviewCount(demoReviewCount + 1)}
+                    />
+                  </div>
                 </div>
                 <div style={{ height: '5px', width: '110px', background: 'rgba(255,255,255,0.2)', borderRadius: '3px', margin: '8px auto', zIndex: 10 }}></div>
               </div>
@@ -275,258 +211,217 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* SECTION 2: HOW IT WORKS (FUTURISTIC 4-STEP PIPELINE) */}
+      {/* SECTION 2: HOW IT WORKS — four steps, each with a small illustration */}
       <section className="section-alt-indigo">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem', padding: '0 4vw', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
-          
-          <div style={{ textAlign: 'center', maxWidth: '650px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <h2 className="hero-display-title" style={{ fontSize: '2.5rem', margin: '0 0 0.5rem', textAlign: 'center' }}>
-              Как Работи Платформата?
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6 }}>
-              Интеграцията става за броени минути, а резултатите започват веднага.
+        <div className="landing-container">
+          <div className="section-head">
+            <span className="section-eyebrow">Как работи</span>
+            <h2 className="section-title">Четири стъпки. <br className="hero-br" />Без приложение. Без обучение.</h2>
+            <p className="section-lead">
+              Гостът докосва картата, която идва със сметката, оценява обслужването и при желание
+              оставя бакшиш. Вие виждате всичко в таблото си.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', position: 'relative' }}>
-            
-            {/* STEP 01 */}
-            <div className="glow-border-card" style={{ padding: '2.25rem 1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', background: 'rgba(14, 14, 26, 0.85)', border: '1px solid rgba(139, 92, 246, 0.3)', boxShadow: '0 15px 35px rgba(0,0,0,0.6)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ 
-                  width: '52px', 
-                  height: '52px', 
-                  borderRadius: '16px', 
-                  background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 100%)', 
-                  border: '1px solid rgba(139, 92, 246, 0.5)',
-                  color: '#fff', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                  fontSize: '1.3rem',
-                  boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)'
-                }}>01</div>
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--accent-purple)', background: 'rgba(139, 92, 246, 0.15)', padding: '0.2rem 0.65rem', borderRadius: '99px', border: '1px solid rgba(139, 92, 246, 0.3)', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <IconNfcChip size={14} /> NFC СМЕТКА
-                </span>
+          <ol className="steps-grid">
+            <li className="step-card">
+              <div className="step-visual" aria-hidden="true">
+                <div className="mini-receipt">
+                  <span className="mini-receipt-title">Сметка · Маса 7</span>
+                  <i /><i /><i />
+                  <b>Общо <em>€48,50</em></b>
+                </div>
+                <img className="mini-card" src={`${import.meta.env.BASE_URL}card-front-hero.webp`} alt="" />
               </div>
-              <h3 style={{ fontSize: '1.25rem', margin: 0, fontWeight: 700 }}>Сервитьорът дава сметката</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', lineHeight: 1.6, margin: 0 }}>
-                Заедно със сметката, сервитьорът оставя своята матова NFC карта или табелка с QR код.
-              </p>
-            </div>
-
-            {/* STEP 02 */}
-            <div className="glow-border-card" style={{ padding: '2.25rem 1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', background: 'rgba(14, 14, 26, 0.85)', border: '1px solid rgba(6, 182, 212, 0.3)', boxShadow: '0 15px 35px rgba(0,0,0,0.6)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ 
-                  width: '52px', 
-                  height: '52px', 
-                  borderRadius: '16px', 
-                  background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(6, 182, 212, 0.1) 100%)', 
-                  border: '1px solid rgba(6, 182, 212, 0.5)',
-                  color: '#fff', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                  fontSize: '1.3rem',
-                  boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)'
-                }}>02</div>
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--accent-cyan)', background: 'rgba(6, 182, 212, 0.15)', padding: '0.2rem 0.65rem', borderRadius: '99px', border: '1px solid rgba(6, 182, 212, 0.3)', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <IconNfcChip size={14} /> БЕЗ АПЛИКАЦИЯ
-                </span>
+              <div className="step-body">
+                <span className="step-index">01</span>
+                <h3>Картата идва със сметката</h3>
+                <p>Сервитьорът оставя своята NFC карта в папката със сметката. Всяка карта е свързана с конкретен човек от екипа.</p>
               </div>
-              <h3 style={{ fontSize: '1.25rem', margin: 0, fontWeight: 700 }}>Клиентът допира телефона</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', lineHeight: 1.6, margin: 0 }}>
-                Без сваляне на приложения! Мобилното меню се отваря моментално на екрана на клиента.
-              </p>
-            </div>
+            </li>
 
-            {/* STEP 03 */}
-            <div className="glow-border-card" style={{ padding: '2.25rem 1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', background: 'rgba(14, 14, 26, 0.85)', border: '1px solid rgba(245, 158, 11, 0.3)', boxShadow: '0 15px 35px rgba(0,0,0,0.6)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ 
-                  width: '52px', 
-                  height: '52px', 
-                  borderRadius: '16px', 
-                  background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(245, 158, 11, 0.1) 100%)', 
-                  border: '1px solid rgba(245, 158, 11, 0.5)',
-                  color: '#fff', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                  fontSize: '1.3rem',
-                  boxShadow: '0 4px 15px rgba(245, 158, 11, 0.3)'
-                }}>03</div>
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--gold)', background: 'rgba(245, 158, 11, 0.15)', padding: '0.2rem 0.65rem', borderRadius: '99px', border: '1px solid rgba(245, 158, 11, 0.3)', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <IconPrismStar size={14} /> APPLE PAY
-                </span>
+            <li className="step-card">
+              <div className="step-visual" aria-hidden="true">
+                <span className="mini-wave" /><span className="mini-wave" /><span className="mini-wave" />
+                <div className="mini-phone">
+                  <span className="mini-phone-notch" />
+                  <span className="mini-phone-stars">★★★★★</span>
+                  <span className="mini-phone-line" />
+                  <span className="mini-phone-line mini-phone-line--short" />
+                  <span className="mini-phone-btn" />
+                </div>
               </div>
-              <h3 style={{ fontSize: '1.25rem', margin: 0, fontWeight: 700 }}>Оценка &amp; Дигитален Бакшиш</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', lineHeight: 1.6, margin: 0 }}>
-                Клиентът избира 1-5 звезди, оставя бакшиш през Apple/Google Pay и пише отзив.
-              </p>
-            </div>
-
-            {/* STEP 04 */}
-            <div className="glow-border-card" style={{ padding: '2.25rem 1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', background: 'rgba(14, 14, 26, 0.85)', border: '1px solid rgba(16, 185, 129, 0.3)', boxShadow: '0 15px 35px rgba(0,0,0,0.6)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ 
-                  width: '52px', 
-                  height: '52px', 
-                  borderRadius: '16px', 
-                  background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(16, 185, 129, 0.1) 100%)', 
-                  border: '1px solid rgba(16, 185, 129, 0.5)',
-                  color: '#fff', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                  fontSize: '1.3rem',
-                  boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)'
-                }}>04</div>
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--green)', background: 'rgba(16, 185, 129, 0.15)', padding: '0.2rem 0.65rem', borderRadius: '99px', border: '1px solid rgba(16, 185, 129, 0.3)', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <IconSmartRadar size={14} /> GOOGLE MAPS
-                </span>
+              <div className="step-body">
+                <span className="step-index">02</span>
+                <h3>Гостът докосва с телефона</h3>
+                <p>Страницата за оценка се отваря веднага — без приложение и без регистрация. Без NFC работи и QR кодът на гърба.</p>
               </div>
-              <h3 style={{ fontSize: '1.25rem', margin: 0, fontWeight: 700 }}>Google Reviews &amp; Табло</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', lineHeight: 1.6, margin: 0 }}>
-                Доволните клиенти се насочват към Google Maps, а управителят вижда рейтинга в реално време.
-              </p>
-            </div>
+            </li>
 
-          </div>
+            <li className="step-card">
+              <div className="step-visual" aria-hidden="true">
+                <div className="mini-rate">
+                  <span className="mini-stars">★★★★★</span>
+                  <div className="mini-chips">
+                    <span>Любезен</span><span>Бърз</span><span>Точен</span>
+                  </div>
+                  <div className="mini-chips">
+                    <span>€2</span><span className="is-on">€5</span><span>€10</span>
+                  </div>
+                </div>
+              </div>
+              <div className="step-body">
+                <span className="step-index">03</span>
+                <h3>Оценка и бакшиш за секунди</h3>
+                <p>Гостът избира звезди, отбелязва какво му е харесало и при желание оставя бакшиш — директно по сметката на сервитьора.</p>
+              </div>
+            </li>
+
+            <li className="step-card">
+              <div className="step-visual" aria-hidden="true">
+                <div className="mini-dash">
+                  <span className="mini-toast">Нова оценка · ★★★★★</span>
+                  <div className="mini-dash-head">
+                    <span className="mini-avatar">МГ</span>
+                    <div>
+                      <strong>Мария Г.</strong>
+                      <span>Сервитьор</span>
+                    </div>
+                    <em>4,9 ★</em>
+                  </div>
+                  <div className="mini-bars"><i /><i /><i /><i /><i /><i /><i /></div>
+                </div>
+              </div>
+              <div className="step-body">
+                <span className="step-index">04</span>
+                <h3>Вие виждате всичко</h3>
+                <p>Оценките и коментарите за всеки сервитьор са в таблото ви веднага, а при 1–2★ получавате известие в Telegram или по имейл.</p>
+              </div>
+            </li>
+          </ol>
         </div>
       </section>
 
-      {/* SECTION 3: INTERACTIVE ROI & REVENUE CALCULATOR (FUTURISTIC HOLOGRAPHIC GLASS) */}
+      {/* SECTION 3: ONE UNHAPPY GUEST, TWO ENDINGS — the case for owners */}
       <section className="section-alt-dark">
-        <div style={{ padding: '0 4vw', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
-          <div className="glass-panel mobile-stack" style={{ padding: '3.5rem 3.5vw', borderRadius: '32px', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3.5vw', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
-            
-            {/* Ambient Backlight Orbs */}
-            <div className="bg-glow-purple" style={{ top: '-20%', right: '-10%', opacity: 0.4 }}></div>
-            <div className="bg-glow-cyan" style={{ bottom: '-20%', left: '-10%', opacity: 0.3 }}></div>
+        <div className="landing-container">
+          <div className="section-head">
+            <span className="section-eyebrow">Защо TipTap</span>
+            <h2 className="section-title">Един недоволен гост. Два различни края.</h2>
+            <p className="section-lead">
+              Петък вечер, пълен салон. Гостът на маса 7 чака сметката си 25 минути.
+              Ето какво се случва след това.
+            </p>
+          </div>
 
-            {/* Left Controls & Sliders */}
-            <div style={{ zIndex: 2 }}>
-              <h2 style={{
-                fontFamily: 'var(--font-official)',
-                fontSize: '1.85rem',
-                fontWeight: 700,
-                lineHeight: 1.25,
-                letterSpacing: '-0.01em',
-                textAlign: 'left',
-                margin: '0 0 1rem',
-                color: '#ffffff',
-              }}>
-                Изчислете допълнителните приходи &amp; отзиви
-              </h2>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '2.2rem', fontSize: '1.05rem' }}>
-                Колко нови 5-звездни Google ревюта и дигитални бакшиши пропуска вашият ресторант всеки месец?
+          <div className="endings-grid">
+            <article className="ending ending--without">
+              <header>
+                <span className="ending-tag">Без TipTap</span>
+                <h3>Научавате, когато е късно</h3>
+              </header>
+              <ol className="ending-timeline">
+                <li>
+                  <time>21:30</time>
+                  <div>
+                    <strong>Гостът плаща и си тръгва раздразнен.</strong>
+                    <span>Никой в заведението не разбира защо.</span>
+                  </div>
+                </li>
+                <li>
+                  <time>22:10</time>
+                  <div>
+                    <strong>Публикува отзив с 1★ в Google.</strong>
+                    <span>„Чакахме сметката половин час.“ Ще го прочете всеки бъдещ гост.</span>
+                  </div>
+                </li>
+                <li>
+                  <time>след седмица</time>
+                  <div>
+                    <strong>Вие го виждате.</strong>
+                    <span>Не знаете кой сервитьор е бил, нито какво точно се е случило.</span>
+                  </div>
+                </li>
+              </ol>
+              <p className="ending-result ending-result--bad">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                  <path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+                Изгубен гост и отзив в Google, който остава.
               </p>
+            </article>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                {/* Tables Slider Box */}
-                <div className="glow-border-card" style={{ padding: '1.1rem 1.35rem', background: 'rgba(18, 18, 30, 0.6)', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
-                    <label style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>🪑 Брой маси в заведението</label>
-                    <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#fff', background: 'rgba(139, 92, 246, 0.3)', border: '1px solid rgba(139, 92, 246, 0.5)', padding: '0.2rem 0.75rem', borderRadius: '99px' }}>
-                      {tablesCount} маси
-                    </span>
+            <article className="ending ending--with">
+              <header>
+                <span className="ending-tag">С TipTap</span>
+                <h3>Научавате, докато гостът е още тук</h3>
+              </header>
+              <ol className="ending-timeline">
+                <li>
+                  <time>21:30</time>
+                  <div>
+                    <strong>Гостът докосва картата и дава 2★.</strong>
+                    <span>„Чакахме сметката 25 минути.“</span>
                   </div>
-                  <input 
-                    type="range" min="5" max="100" step="5"
-                    className="modern-range-slider"
-                    value={tablesCount}
-                    onChange={(e) => setTablesCount(parseInt(e.target.value))}
-                  />
-                </div>
-
-                {/* Turns per Table Slider Box */}
-                <div className="glow-border-card" style={{ padding: '1.1rem 1.35rem', background: 'rgba(18, 18, 30, 0.6)', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
-                    <label style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>🔄 Сметки на маса дневно (Заетост)</label>
-                    <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#fff', background: 'rgba(6, 182, 212, 0.3)', border: '1px solid rgba(6, 182, 212, 0.5)', padding: '0.2rem 0.75rem', borderRadius: '99px' }}>
-                      {turnsPerTable} сметки/маса
-                    </span>
+                </li>
+                <li>
+                  <time>21:31</time>
+                  <div>
+                    <strong>Получавате известие в Telegram.</strong>
+                    <span>С името на сервитьора и коментара на госта.</span>
                   </div>
-                  <input 
-                    type="range" min="1" max="8" step="1"
-                    className="modern-range-slider"
-                    value={turnsPerTable}
-                    onChange={(e) => setTurnsPerTable(parseInt(e.target.value))}
-                  />
-                </div>
-
-                {/* Avg Tip per Check Slider Box */}
-                <div className="glow-border-card" style={{ padding: '1.1rem 1.35rem', background: 'rgba(18, 18, 30, 0.6)', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
-                    <label style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>💶 Среден бакшиш на сметка (€)</label>
-                    <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#fff', background: 'rgba(16, 185, 129, 0.3)', border: '1px solid rgba(16, 185, 129, 0.5)', padding: '0.2rem 0.75rem', borderRadius: '99px' }}>
-                      €{avgTipPerCheck.toFixed(2)}
-                    </span>
+                </li>
+                <li>
+                  <time>21:35</time>
+                  <div>
+                    <strong>Управителят отива на масата.</strong>
+                    <span>Извинява се, а гостът получава ваучер за десерт при следващото посещение.</span>
                   </div>
-                  <input 
-                    type="range" min="1" max="10" step="0.5"
-                    className="modern-range-slider"
-                    value={avgTipPerCheck}
-                    onChange={(e) => setAvgTipPerCheck(parseFloat(e.target.value))}
-                  />
-                </div>
+                </li>
+                <li>
+                  <time>на другия ден</time>
+                  <div>
+                    <strong>Говорите с екипа с конкретен пример.</strong>
+                    <span>Не с предположения.</span>
+                  </div>
+                </li>
+              </ol>
+              <p className="ending-result ending-result--good">
+                <CheckCircle size={18} color="currentColor" />
+                Спасен гост и по-добро обслужване още от следващата смяна.
+              </p>
+            </article>
+          </div>
 
-                {/* Daily Total Summary pill */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
-                  <span>Общо обслужени маси дневно: <strong style={{ color: '#fff' }}>{dailyChecks} сметки</strong></span>
-                  <span>Месечен брой: <strong style={{ color: '#fff' }}>{monthlyChecks.toLocaleString()} сметки</strong></span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right High-Tech Result Stage Card */}
-            <div className="glow-border-card" style={{ padding: '2.5rem', background: 'rgba(12, 12, 24, 0.95)', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 25px 70px rgba(0,0,0,0.9), 0 0 50px rgba(139,92,246,0.25)', zIndex: 2, display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '1rem' }}>
-                <h3 style={{ fontSize: '1.25rem', margin: 0, fontWeight: 800, letterSpacing: '-0.01em' }}>Прогнозиран Месечен Ефект</h3>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--green)', background: 'rgba(16, 185, 129, 0.15)', padding: '0.25rem 0.75rem', borderRadius: '99px', border: '1px solid rgba(16, 185, 129, 0.35)', boxShadow: '0 0 15px rgba(16, 185, 129, 0.2)' }}>
-                  ⚡ Възвръщаемост за 3 дни
-                </span>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1.25rem', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Месечни Бакшиши</span>
-                  <span style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--green)', display: 'block', lineHeight: 1.1 }}>
-                    +€{estimatedMonthlyTips.toLocaleString()}
-                  </span>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: '0.35rem', display: 'block' }}>онлайн бакшиш, през Apple Pay</span>
-                </div>
-
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1.25rem', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Нови Google 5★ Отзива</span>
-                  <span style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--gold)', display: 'block', lineHeight: 1.1 }}>
-                    +{estimatedMonthlyReviews.toLocaleString()}
-                  </span>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: '0.35rem', display: 'block' }}>класиране в Google Maps</span>
-                </div>
-              </div>
-
-              <div style={{ background: 'rgba(139, 92, 246, 0.12)', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px', padding: '1.15rem', fontSize: '0.875rem', color: 'var(--text-primary)', lineHeight: 1.5, boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)' }}>
-                💡 <strong>Логика на изчислението:</strong> При <strong>{tablesCount} маси</strong> и средно <strong>{turnsPerTable} сметки/маса дневно</strong> ({monthlyChecks.toLocaleString()} сметки/месец), екипът Ви ще получава допълнително <strong>~€{estimatedMonthlyTips.toLocaleString()} бакшиши</strong>, а ресторантът Ви ще привлича нови гости с <strong>+{estimatedMonthlyReviews.toLocaleString()} нови 5-звездни отзива</strong> в Google Maps всеки месец!
-              </div>
-
-              <button className="btn ios-glass-btn-primary" style={{ width: '100%', padding: '1.05rem', fontSize: '1rem' }} onClick={onNavigateToCustomizer}>
-                Започнете с вашия ресторант <ArrowRight size={18} />
-              </button>
-            </div>
+          <div className="endings-cta">
+            <button className="hero-cta hero-cta--primary" onClick={onNavigateToDashboard}>
+              Вижте демо таблото
+              <ArrowRight size={18} className="hero-cta-arrow" />
+            </button>
+            <button className="hero-cta hero-cta--secondary" onClick={onNavigateToCustomizer}>
+              Поръчайте NFC карти
+            </button>
           </div>
         </div>
       </section>
 
-      {/* SECTION 4: HARDWARE & CARD PREVIEW SECTION (TONE 2: RICH OBSIDIAN INDIGO) */}
-      <section className="section-alt-indigo">
+      {/* SECTION 3b: EVERYTHING YOU GET — all features in one grid */}
+      <section className="section-alt-indigo" id="features">
+        <div className="landing-container is-wide">
+          <div className="section-head">
+            <span className="section-eyebrow">Функции</span>
+            <h2 className="section-title">Всичко, което получавате с TipTap</h2>
+            <p className="section-lead">
+              Карти, табло и известия в един пакет — без приложение за гостите и без обучение за екипа.
+            </p>
+          </div>
+          <FeatureBento />
+        </div>
+      </section>
+
+      {/* SECTION 4: HARDWARE & CARD PREVIEW SECTION */}
+      <section className="section-alt-dark">
         <div style={{ padding: '0 4vw', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
           <div className="glass-panel mobile-stack" style={{ padding: '3.5rem 3vw', borderRadius: '32px', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '4vw', alignItems: 'center' }}>
             <div>
@@ -591,120 +486,80 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* SECTION 5: PRICING SUBSCRIPTION PLANS (TONE 1: MIDNIGHT TITANIUM) */}
-      <section className="section-alt-dark">
+      {/* SECTION 5: PRICING SUBSCRIPTION PLANS */}
+      <section className="section-alt-indigo" id="plans">
         <div style={{ padding: '0 4vw', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
-          <div style={{ textAlign: 'center', maxWidth: '650px', margin: '0 auto 3rem' }}>
-            <h2 style={{ fontSize: '2.25rem', marginBottom: '0.5rem' }}>Прозрачни Абонаментни Планове</h2>
-            <p style={{ color: 'var(--text-secondary)' }}>Без скрити такси. Изберете плана, който отговаря на мащаба на вашето заведение.</p>
+          <div className="section-head">
+            <span className="section-eyebrow">Цени</span>
+            <h2 className="section-title">Прозрачни абонаментни планове</h2>
+            <p className="section-lead">14 дни безплатно, без скрити такси и без обвързващ договор. После изберете плана според мащаба на заведението.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
-            {/* PLAN 1 */}
+          <PlanIncludes />
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', maxWidth: '920px', margin: '0 auto' }}>
+            {/* PLAN 1: START */}
             <div className="glass-card" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div>
-                <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)' }}>Старт Ресторант</h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>За малки заведения и кафенета</p>
+                <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)' }}>План „Старт“</h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>За кафенета, барове и малки ресторанти</p>
               </div>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>
-                €15 <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/месец</span>
+              <div>
+                <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>
+                  €19.99 <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/месец</span>
+                </div>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>или €15.99/месец при годишно плащане</p>
               </div>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem', color: 'var(--text-secondary)', listStyle: 'none' }}>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> До 10 активни NFC карти</li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Дигитален бакшиш (Apple/Google Pay)</li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Google Reviews автоматично насочване</li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Базово администраторско табло</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> До 10 сервитьорски профила</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Табло с оценки, фуния и класация на екипа</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Google отзиви с едно докосване</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Поддръжка по имейл</li>
               </ul>
               <button className="btn btn-secondary" style={{ marginTop: 'auto' }} onClick={onNavigateToCustomizer}>
                 Избери Старт
               </button>
             </div>
 
-            {/* PLAN 2 (RECOMMENDED PRO) */}
+            {/* PLAN 2: PREMIUM (RECOMMENDED) */}
             <div className="glow-border-card" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', border: '2px solid var(--accent-purple)', background: 'rgba(18, 18, 30, 0.85)', position: 'relative' }}>
               <div style={{ position: 'absolute', top: '-14px', right: '20px', background: 'linear-gradient(135deg, var(--accent-purple) 0%, #06b6d4 100%)', padding: '0.25rem 0.85rem', borderRadius: '99px', fontSize: '0.75rem', fontWeight: 800, color: '#fff' }}>
                 НАЙ-ПОПУЛЯРЕН
               </div>
               <div>
-                <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)' }}>PRO Ресторант</h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>За средни и големи ресторанти</p>
+                <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)' }}>План „Премиум“</h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>За средни и големи ресторанти и вериги</p>
               </div>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800 }} className="text-gradient-purple">
-                €29 <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/месец</span>
+              <div>
+                <div style={{ fontSize: '2.5rem', fontWeight: 800 }} className="text-gradient-purple">
+                  €39.99 <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/месец</span>
+                </div>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>или €31.99/месец при годишно плащане</p>
               </div>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem', color: 'var(--text-secondary)', listStyle: 'none' }}>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> До 30 активни NFC карти &amp; Табелки</li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Детайлна статистика за всеки сервитьор</li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Приоритетно превеждане на бакшишите</li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Персонализирано лого &amp; дизайн</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Неограничен брой сервитьори и обекти</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Подробна статистика и експорт в Excel</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Общ преглед на всички обекти</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Карти с вашето лого и дизайн</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Персонален акаунт мениджър</li>
               </ul>
               <button className="btn ios-glass-btn-primary" style={{ marginTop: 'auto' }} onClick={onNavigateToCustomizer}>
-                Започни PRO Пробност
-              </button>
-            </div>
-
-            {/* PLAN 3 */}
-            <div className="glass-card" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <div>
-                <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)' }}>Premium Верига</h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>За вериги заведения &amp; франчайзи</p>
-              </div>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>
-                €49 <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/месец</span>
-              </div>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem', color: 'var(--text-secondary)', listStyle: 'none' }}>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Неограничен брой карти &amp; маси</li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> API интеграция с ПОС системи</li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> Персонален акаунт мениджър</li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle size={16} color="var(--green)" /> 24/7 Денонощна поддръжка</li>
-              </ul>
-              <button className="btn btn-secondary" style={{ marginTop: 'auto' }} onClick={onNavigateToCustomizer}>
-                Свържи се за Вериги
+                Избери Премиум
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 6: OWNER TESTIMONIALS & FAQ (TONE 2: RICH OBSIDIAN INDIGO) */}
-      <section className="section-alt-indigo">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem', padding: '0 4vw', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
-          
-          {/* Testimonials */}
-          <div>
-            <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
-              <h2 style={{ fontSize: '2.25rem', marginBottom: '0.5rem' }}>Доверено от Ресторантьори в България</h2>
-              <p style={{ color: 'var(--text-secondary)' }}>Вижте какво споделят собствениците на заведения за TipTap.</p>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-              <div className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ display: 'flex', gap: '4px', color: 'var(--gold)' }}>
-                  {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="var(--gold)" />)}
-                </div>
-                <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.6, italic: 'true' }}>
-                  "Откакто сложихме NFC картите в сметките, Google отзивите ни скочиха с над 300%. Клиентите са във възторг, че могат да платят бакшиш с телефона си."
-                </p>
-                <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
-                  <strong style={{ display: 'block', fontSize: '0.95rem' }}>Димитър Василев</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Управител, Ресторант Леденика</span>
-                </div>
-              </div>
-
-              <div className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ display: 'flex', gap: '4px', color: 'var(--gold)' }}>
-                  {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="var(--gold)" />)}
-                </div>
-                <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.6, italic: 'true' }}>
-                  "Бакшишите на персонала ни се увеличиха с 35%. Вече не се случва клиент да каже 'Нямам монети в брой' – просто докосва с Apple Pay."
-                </p>
-                <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
-                  <strong style={{ display: 'block', fontSize: '0.95rem' }}>Елена Стоянова</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Собственик, Bistro Central</span>
-                </div>
-              </div>
-            </div>
+      {/* SECTION 6: FAQ */}
+      <section className="section-alt-dark" id="faq">
+        <div className="landing-container">
+          <div className="section-head">
+            <span className="section-eyebrow">Въпроси и отговори</span>
+            <h2 className="section-title">Всичко, което питат управителите</h2>
+            <p className="section-lead">Не намирате отговор? Пишете ни — отговаряме в рамките на работния ден.</p>
           </div>
+          <Faq />
         </div>
       </section>
     </div>

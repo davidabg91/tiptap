@@ -1,29 +1,27 @@
-export interface Waiter {
-  id: string;
-  name: string;
-  role: string;
-  rating: number;
-  totalReviews: number;
-  totalTips: number;
-  scanCount: number;
-  googleRedirects: number;
-  shiftsCount: number;
-  avgTipPerBill: number;
-  qrCodeUrl: string;
-  avatar: string;
-  topTags: string[];
-}
+/**
+ * Demo store — used by the marketing demos (#demo, #demo-guest, the hero
+ * phone) and whenever no backend is configured.
+ *
+ * Instead of hard-coded totals it keeps a realistic 60-day history of scans,
+ * ratings, tip clicks, Google clicks and vouchers (generated once, seeded so
+ * every visitor sees the same picture), and the dashboard computes every
+ * number from it exactly like it does for live data.
+ */
 
-export interface Review {
-  id: string;
-  waiterId: string;
-  waiterName: string;
-  rating: number;
-  comment: string;
-  tipAmount: number;
-  tags: string[];
-  createdAt: string;
-}
+import {
+  DEFAULT_SETTINGS,
+  type FunnelEvent,
+  type FunnelEventType,
+  type Review,
+  type VenueSettings,
+  type Voucher,
+  type Waiter,
+  type WaiterBase,
+} from '../lib/types';
+import { TAG_KEYS, sentimentOf } from '../lib/ratingI18n';
+import { withStats } from '../lib/stats';
+
+export type { Review, Waiter } from '../lib/types';
 
 export interface CardOrder {
   id: string;
@@ -37,96 +35,268 @@ export interface CardOrder {
   createdAt: string;
 }
 
-export interface Subscription {
-  id: string;
-  planName: string;
-  price: number;
-  status: 'active' | 'cancelled' | 'pending';
-  nextBillingDate: string;
-  cardLimit: number;
-  activeCardsCount: number;
+interface DemoStore {
+  waiters: WaiterBase[];
+  reviews: Review[];
+  events: FunnelEvent[];
+  vouchers: Voucher[];
+  settings: VenueSettings;
 }
 
-const INITIAL_WAITERS: Waiter[] = [
+const STORE_KEY = 'tiptap_demo_v2';
+const DAY = 24 * 60 * 60 * 1000;
+
+const DEMO_WAITERS: WaiterBase[] = [
   {
-    id: 'waiter-1',
-    name: 'Иван Петров',
-    role: 'Старши Сервитьор',
-    rating: 4.9,
-    totalReviews: 128,
-    totalTips: 320.00,
-    scanCount: 384,
-    googleRedirects: 112,
-    shiftsCount: 22,
-    avgTipPerBill: 2.50,
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tiptap.bg/rate/waiter-1',
+    id: 'waiter-1', slug: 'waiter-1', name: 'Иван Петров', role: 'Старши сервитьор', tipUrl: null,
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
-    topTags: ['Бързо обслужване', 'Усмихнат', 'Отлична препоръка']
   },
   {
-    id: 'waiter-2',
-    name: 'Мария Георгиева',
-    role: 'Сервитьор',
-    rating: 4.8,
-    totalReviews: 95,
-    totalTips: 485.50,
-    scanCount: 290,
-    googleRedirects: 84,
-    shiftsCount: 19,
-    avgTipPerBill: 5.11,
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tiptap.bg/rate/waiter-2',
+    id: 'waiter-2', slug: 'waiter-2', name: 'Мария Георгиева', role: 'Сервитьор', tipUrl: 'https://revolut.me/maria-demo',
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=200',
-    topTags: ['Внимателна', 'Любезна', 'Чиста маса']
   },
   {
-    id: 'waiter-3',
-    name: 'Георги Димитров',
-    role: 'Барман / Сервитьор',
-    rating: 4.7,
-    totalReviews: 76,
-    totalTips: 195.00,
-    scanCount: 450,
-    googleRedirects: 62,
-    shiftsCount: 16,
-    avgTipPerBill: 4.21,
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tiptap.bg/rate/waiter-3',
+    id: 'waiter-3', slug: 'waiter-3', name: 'Георги Димитров', role: 'Барман / сервитьор', tipUrl: null,
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200',
-    topTags: ['Страхотни коктейли', 'Бърз', 'Атмосфера']
-  }
+  },
 ];
 
-const INITIAL_REVIEWS: Review[] = [
-  {
-    id: 'rev-1',
-    waiterId: 'waiter-1',
-    waiterName: 'Иван Петров',
-    rating: 5,
-    comment: 'Изключително внимателно обслужване! Храната дойде бързо и ни препоръча страхотно вино.',
-    tipAmount: 10.00,
-    tags: ['Бързо обслужване', 'Отлична препоръка'],
-    createdAt: '2026-08-06 20:45'
-  },
-  {
-    id: 'rev-2',
-    waiterId: 'waiter-2',
-    waiterName: 'Мария Георгиева',
-    rating: 5,
-    comment: 'Страхотно отношение към децата на масата. Благодарим!',
-    tipAmount: 5.00,
-    tags: ['Любезна', 'Внимателна'],
-    createdAt: '2026-08-06 19:30'
-  },
-  {
-    id: 'rev-3',
-    waiterId: 'waiter-1',
-    waiterName: 'Иван Петров',
-    rating: 4,
-    comment: 'Много добро обслужване, малко забавяне при десерта, но всичко беше вкусно.',
-    tipAmount: 3.50,
-    tags: ['Усмихнат'],
-    createdAt: '2026-08-06 18:15'
+const DEMO_SETTINGS: VenueSettings = {
+  ...DEFAULT_SETTINGS,
+  googleReviewUrl: 'https://search.google.com/local/writereview?placeid=DEMO',
+  tipUrl: 'https://revolut.me/ledenika-team',
+  notifyEmail: 'manager@ledenika.bg',
+  voucherEnabled: true,
+};
+
+const COMMENTS: Record<'low' | 'mid' | 'high', { text: string; lang: string }[]> = {
+  low: [
+    { text: 'Чакахме сметката повече от 20 минути.', lang: 'bg' },
+    { text: 'Храната дойде студена, а никой не провери масата.', lang: 'bg' },
+    { text: 'Сбъркаха поръчката и се наложи да чакаме отново.', lang: 'bg' },
+    { text: 'We waited ages for someone to take our order.', lang: 'en' },
+  ],
+  mid: [
+    { text: 'Храната беше хубава, но обслужването малко бавно.', lang: 'bg' },
+    { text: 'Нормално, но в петък вечер е твърде натоварено.', lang: 'bg' },
+    { text: 'Gutes Essen, der Service war etwas langsam.', lang: 'de' },
+  ],
+  high: [
+    { text: 'Изключително внимателно обслужване, препоръча ни страхотно вино.', lang: 'bg' },
+    { text: 'Много мило отношение към децата ни. Благодарим!', lang: 'bg' },
+    { text: 'Бързо, усмихнато и професионално. Ще дойдем пак!', lang: 'bg' },
+    { text: 'Lovely service, thank you so much!', lang: 'en' },
+    { text: 'Sehr freundlich und aufmerksam!', lang: 'de' },
+    { text: 'Servire excelentă, mulțumim!', lang: 'ro' },
+  ],
+};
+
+/** Small seeded PRNG (mulberry32) so the demo history is the same for everyone. */
+function rng(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function generateStore(now = Date.now()): DemoStore {
+  const random = rng(20261108);
+  const pick = <T,>(items: T[]) => items[Math.floor(random() * items.length)];
+  // Each waiter rates a little differently, so the leaderboard means something.
+  const profiles: Record<string, number[]> = {
+    'waiter-1': [5, 5, 5, 5, 5, 4, 4, 5, 3, 5],
+    'waiter-2': [5, 5, 4, 5, 4, 5, 3, 5, 4, 2],
+    'waiter-3': [5, 4, 4, 3, 5, 3, 4, 2, 5, 1],
+  };
+
+  const reviews: Review[] = [];
+  const events: FunnelEvent[] = [];
+  const vouchers: Voucher[] = [];
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+
+  for (let daysAgo = 59; daysAgo >= 0; daysAgo--) {
+    const day = today.getTime() - daysAgo * DAY;
+    const weekday = new Date(day).getDay();
+    const busy = weekday === 5 || weekday === 6 ? 1.6 : weekday === 0 ? 1.3 : 1;
+
+    for (const waiter of DEMO_WAITERS) {
+      const scans = Math.round((2 + random() * 4) * busy);
+      for (let s = 0; s < scans; s++) {
+        // Lunch 12–15 h or dinner 18–23 h.
+        const hour = random() < 0.35 ? 12 + random() * 3 : 18 + random() * 5;
+        const at = day + hour * 60 * 60 * 1000 + Math.floor(random() * 59) * 60 * 1000;
+        if (at > now) continue;
+        const createdAt = new Date(at).toISOString();
+        events.push({ waiterId: waiter.id, type: 'scan', createdAt });
+        if (random() > 0.72) continue; // opened the page but didn't rate
+
+        const rating = pick(profiles[waiter.id]);
+        const sentiment = sentimentOf(rating);
+        const tagPool = TAG_KEYS[sentiment];
+        const tags = random() < 0.75
+          ? [...new Set([pick(tagPool), pick(tagPool)])].slice(0, random() < 0.5 ? 1 : 2)
+          : [];
+        const withComment = sentiment === 'low' ? random() < 0.8 : random() < 0.22;
+        const comment = withComment ? pick(COMMENTS[sentiment]) : null;
+        const id = `rev-${at}-${waiter.id}`;
+        reviews.push({
+          id, waiterId: waiter.id, waiterName: waiter.name, rating,
+          comment: comment?.text ?? '', tags, lang: comment?.lang ?? 'bg', createdAt,
+        });
+
+        if (rating >= 3 && random() < 0.3) {
+          events.push({ waiterId: waiter.id, type: 'tip_click', createdAt, amount: pick([2, 5, 5, 10]) });
+        }
+        if (rating >= 4 && random() < 0.38) {
+          events.push({ waiterId: waiter.id, type: 'google_click', createdAt });
+        }
+        if (rating <= DEMO_SETTINGS.voucherMaxRating) {
+          const expires = at + DEMO_SETTINGS.voucherValidDays * DAY;
+          vouchers.push({
+            id: `vch-${at}`,
+            code: Math.floor(random() * 0xffffffff).toString(16).toUpperCase().padStart(8, '0'),
+            title: DEMO_SETTINGS.voucherTitle,
+            waiterName: waiter.name,
+            rating,
+            createdAt,
+            expiresAt: new Date(expires).toISOString(),
+            redeemedAt: random() < 0.55 && at + 3 * DAY < now ? new Date(at + 3 * DAY).toISOString() : null,
+          });
+        }
+      }
+    }
   }
-];
+
+  const newestFirst = (a: { createdAt: string }, b: { createdAt: string }) => b.createdAt.localeCompare(a.createdAt);
+  return {
+    waiters: DEMO_WAITERS,
+    reviews: reviews.sort(newestFirst),
+    events,
+    vouchers: vouchers.sort(newestFirst),
+    settings: DEMO_SETTINGS,
+  };
+}
+
+let cache: DemoStore | null = null;
+
+function load(): DemoStore {
+  if (cache) return cache;
+  try {
+    const saved = localStorage.getItem(STORE_KEY);
+    if (saved) {
+      cache = JSON.parse(saved) as DemoStore;
+      cache.settings = { ...DEFAULT_SETTINGS, ...cache.settings };
+      return cache;
+    }
+  } catch { /* corrupt or blocked storage — regenerate */ }
+  cache = generateStore();
+  save();
+  return cache;
+}
+
+function save(): void {
+  try {
+    if (cache) localStorage.setItem(STORE_KEY, JSON.stringify(cache));
+  } catch { /* storage full or blocked — keep the in-memory copy */ }
+}
+
+/** Start the demo over (fresh 60-day history). */
+export function resetDemo(): void {
+  cache = generateStore();
+  save();
+}
+
+// ---------- Waiters ----------------------------------------------------------
+
+export const getWaiterBases = (): WaiterBase[] => load().waiters;
+
+export function getWaiters(): Waiter[] {
+  const store = load();
+  return store.waiters.map((w) => withStats(w, store.reviews, store.events));
+}
+
+export function addWaiter(name: string, role: string, avatar?: string, tipUrl?: string | null): WaiterBase {
+  const store = load();
+  const id = `waiter-${Date.now()}`;
+  const waiter: WaiterBase = {
+    id, slug: id, name, role: role || 'Сервитьор', tipUrl: tipUrl || null,
+    avatar: avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200',
+  };
+  store.waiters.push(waiter);
+  save();
+  return waiter;
+}
+
+export function updateWaiter(id: string, patch: Partial<Pick<WaiterBase, 'name' | 'role' | 'avatar' | 'tipUrl'>>): void {
+  const store = load();
+  store.waiters = store.waiters.map((w) => (w.id === id ? { ...w, ...patch } : w));
+  save();
+}
+
+export function deleteWaiter(id: string): void {
+  const store = load();
+  store.waiters = store.waiters.filter((w) => w.id !== id);
+  save();
+}
+
+// ---------- Reviews, events, vouchers ------------------------------------------
+
+export const getReviews = (): Review[] => load().reviews;
+export const getEvents = (): FunnelEvent[] => load().events;
+export const getVouchers = (): Voucher[] => load().vouchers;
+
+export function addReview(input: Omit<Review, 'id' | 'createdAt'>): { review: Review; voucher: Voucher | null } {
+  const store = load();
+  const now = Date.now();
+  const review: Review = { ...input, id: `rev-${now}`, createdAt: new Date(now).toISOString() };
+  store.reviews.unshift(review);
+
+  let voucher: Voucher | null = null;
+  const { voucherEnabled, voucherMaxRating, voucherTitle, voucherValidDays } = store.settings;
+  if (voucherEnabled && review.rating <= voucherMaxRating) {
+    voucher = {
+      id: `vch-${now}`,
+      code: Math.floor(Math.random() * 0xffffffff).toString(16).toUpperCase().padStart(8, '0'),
+      title: voucherTitle,
+      waiterName: review.waiterName,
+      rating: review.rating,
+      createdAt: review.createdAt,
+      expiresAt: new Date(now + voucherValidDays * DAY).toISOString(),
+      redeemedAt: null,
+    };
+    store.vouchers.unshift(voucher);
+  }
+  save();
+  return { review, voucher };
+}
+
+export function addEvent(waiterId: string, type: FunnelEventType, amount?: number | null): void {
+  load().events.push({ waiterId, type, createdAt: new Date().toISOString(), amount: amount ?? null });
+  save();
+}
+
+export function redeemVoucher(id: string): void {
+  const store = load();
+  store.vouchers = store.vouchers.map((v) => (v.id === id ? { ...v, redeemedAt: new Date().toISOString() } : v));
+  save();
+}
+
+// ---------- Venue settings ------------------------------------------------------
+
+export const getSettings = (): VenueSettings => load().settings;
+
+export function saveSettings(patch: Partial<VenueSettings>): VenueSettings {
+  const store = load();
+  store.settings = { ...store.settings, ...patch };
+  save();
+  return store.settings;
+}
+
+// ---------- Card orders & subscription (unchanged demo data) ---------------------
 
 const INITIAL_ORDERS: CardOrder[] = [
   {
@@ -137,153 +307,29 @@ const INITIAL_ORDERS: CardOrder[] = [
     customText: 'Ресторант Леденика',
     logo: 'utensils',
     status: 'delivered',
-    totalPrice: 342.00,
-    createdAt: '2026-08-01'
-  }
+    totalPrice: 222.0,
+    createdAt: '2026-08-01',
+  },
 ];
 
-const INITIAL_SUBSCRIPTION: Subscription = {
-  id: 'SUB-4410',
-  planName: 'Pro Бизнес Абонамент',
-  price: 59.00,
-  status: 'active',
-  nextBillingDate: '2026-09-01',
-  cardLimit: 30,
-  activeCardsCount: 15
-};
-
-export const getWaiters = (): Waiter[] => {
-  const saved = localStorage.getItem('tiptap_waiters');
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      return parsed.map((w: any, idx: number) => {
-        const defaultData = INITIAL_WAITERS.find(iw => iw.id === w.id) || INITIAL_WAITERS[idx % INITIAL_WAITERS.length];
-        return {
-          ...defaultData,
-          ...w,
-          scanCount: typeof w.scanCount === 'number' ? w.scanCount : defaultData.scanCount,
-          totalTips: typeof w.totalTips === 'number' ? w.totalTips : defaultData.totalTips,
-          rating: typeof w.rating === 'number' ? w.rating : defaultData.rating,
-          totalReviews: typeof w.totalReviews === 'number' ? w.totalReviews : defaultData.totalReviews
-        };
-      });
-    } catch (e) {}
-  }
-  localStorage.setItem('tiptap_waiters', JSON.stringify(INITIAL_WAITERS));
-  return INITIAL_WAITERS;
-};
-
-export const getReviews = (): Review[] => {
-  const saved = localStorage.getItem('tiptap_reviews');
-  if (saved) {
-    try { return JSON.parse(saved); } catch (e) {}
-  }
-  localStorage.setItem('tiptap_reviews', JSON.stringify(INITIAL_REVIEWS));
-  return INITIAL_REVIEWS;
-};
-
 export const getOrders = (): CardOrder[] => {
-  const saved = localStorage.getItem('tiptap_orders');
-  if (saved) {
-    try { return JSON.parse(saved); } catch (e) {}
-  }
-  localStorage.setItem('tiptap_orders', JSON.stringify(INITIAL_ORDERS));
+  try {
+    const saved = localStorage.getItem('tiptap_orders');
+    if (saved) return JSON.parse(saved);
+    localStorage.setItem('tiptap_orders', JSON.stringify(INITIAL_ORDERS));
+  } catch { /* storage blocked */ }
   return INITIAL_ORDERS;
 };
 
-export const getSubscription = (): Subscription => {
-  const saved = localStorage.getItem('tiptap_subscription');
-  if (saved) {
-    try { return JSON.parse(saved); } catch (e) {}
-  }
-  localStorage.setItem('tiptap_subscription', JSON.stringify(INITIAL_SUBSCRIPTION));
-  return INITIAL_SUBSCRIPTION;
-};
-
-export const addReview = (review: Omit<Review, 'id' | 'createdAt'>): Review => {
-  const reviews = getReviews();
-  const newRev: Review = {
-    ...review,
-    id: `rev-${Date.now()}`,
-    createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16)
-  };
-  reviews.unshift(newRev);
-  localStorage.setItem('tiptap_reviews', JSON.stringify(reviews));
-
-  // Update waiter totals
-  const waiters = getWaiters();
-  const waiterIndex = waiters.findIndex(w => w.id === review.waiterId);
-  if (waiterIndex !== -1) {
-    const w = waiters[waiterIndex];
-    const newTotalReviews = w.totalReviews + 1;
-    const newTotalTips = w.totalTips + review.tipAmount;
-    const newRating = parseFloat(((w.rating * w.totalReviews + review.rating) / newTotalReviews).toFixed(1));
-    
-    waiters[waiterIndex] = {
-      ...w,
-      rating: newRating,
-      totalReviews: newTotalReviews,
-      totalTips: newTotalTips
-    };
-    localStorage.setItem('tiptap_waiters', JSON.stringify(waiters));
-  }
-
-  return newRev;
-};
-
-export const addWaiter = (name: string, role: string, avatar?: string): Waiter => {
-  const waiters = getWaiters();
-  const id = `waiter-${Date.now()}`;
-  const newWaiter: Waiter = {
-    id,
-    name,
-    role: role || 'Сервитьор',
-    rating: 5.0,
-    totalReviews: 0,
-    totalTips: 0,
-    scanCount: 0,
-    googleRedirects: 0,
-    shiftsCount: 1,
-    avgTipPerBill: 0,
-    qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tiptap.bg/rate/${id}`,
-    avatar: avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200',
-    topTags: ['Нов служител']
-  };
-  waiters.push(newWaiter);
-  localStorage.setItem('tiptap_waiters', JSON.stringify(waiters));
-  return newWaiter;
-};
-
-export const updateWaiter = (updatedWaiter: Waiter): Waiter => {
-  const waiters = getWaiters();
-  const index = waiters.findIndex(w => w.id === updatedWaiter.id);
-  if (index !== -1) {
-    waiters[index] = updatedWaiter;
-    localStorage.setItem('tiptap_waiters', JSON.stringify(waiters));
-  }
-  return updatedWaiter;
-};
-
-export const deleteWaiter = (waiterId: string): void => {
-  const waiters = getWaiters().filter(w => w.id !== waiterId);
-  localStorage.setItem('tiptap_waiters', JSON.stringify(waiters));
-};
-
 export const addOrder = (
-  cardColor: 'black' | 'white', 
-  type: 'card' | 'stand' | 'both', 
-  quantity: number, 
-  customText: string, 
-  logo: string
+  cardColor: 'black' | 'white',
+  type: 'card' | 'stand' | 'both',
+  quantity: number,
+  customText: string,
+  logo: string,
+  totalPrice: number,
 ): CardOrder => {
   const orders = getOrders();
-  const cardPrice = 4.90;
-  const standPrice = 6.90;
-  let unitPrice = cardPrice;
-  if (type === 'stand') unitPrice = standPrice;
-  if (type === 'both') unitPrice = cardPrice + standPrice;
-  const totalPrice = parseFloat((unitPrice * quantity).toFixed(2));
 
   const newOrder: CardOrder = {
     id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -294,9 +340,11 @@ export const addOrder = (
     logo,
     status: 'pending',
     totalPrice,
-    createdAt: new Date().toISOString().substring(0, 10)
+    createdAt: new Date().toISOString().substring(0, 10),
   };
   orders.unshift(newOrder);
-  localStorage.setItem('tiptap_orders', JSON.stringify(orders));
+  try {
+    localStorage.setItem('tiptap_orders', JSON.stringify(orders));
+  } catch { /* storage blocked */ }
   return newOrder;
 };

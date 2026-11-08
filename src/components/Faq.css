@@ -1,0 +1,88 @@
+/* ============================================================
+   FAQ — native <details>, so it works without JS and with keyboard
+   ============================================================ */
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  scroll-margin-top: calc(var(--nav-top) + var(--nav-h) + 24px);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.faq-item[open] {
+  background: rgba(139, 92, 246, 0.06);
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-headline);
+  font-size: clamp(1rem, 1.05vw, 1.1rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary:focus-visible {
+  outline: 2px solid #c4b5fd;
+  outline-offset: 2px;
+  border-radius: 16px;
+}
+
+/* plus that turns into a minus */
+.faq-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 11px;
+  height: 1.6px;
+  border-radius: 2px;
+  background: #d9d2ff;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+
+.faq-icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.faq-item[open] .faq-icon::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.faq-answer {
+  padding: 0 1.25rem 1.2rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #b9b7cc;
+  animation: fadeInUp 0.25s ease;
+}

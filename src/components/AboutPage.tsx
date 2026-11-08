@@ -47,16 +47,18 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigateToCustomizer }) 
   };
 
   const offerings = [
-    { icon: <IconNfcChip size={26} color="#a78bfa" />, title: 'NFC карти & QR табелки', text: 'Брандирани безконтактни карти за сметкодържача и елегантни настолни табелки за всяка маса.' },
-    { icon: <IconEuroChip size={26} color="#a78bfa" />, title: 'Дигитални бакшиши', text: 'Клиентите оставят бакшиш за секунди през Apple Pay и Google Pay — без кеш, без приложение.' },
-    { icon: <IconVipWaiters size={26} color="#a78bfa" />, title: 'Оценка на сервитьорите', text: 'Реални оценки от гостите за всеки член на екипа, с детайлна статистика в админ таблото.' },
-    { icon: <IconSmartRadar size={26} color="#a78bfa" />, title: 'Google 5★ отзиви', text: 'Доволните гости се насочват автоматично към Google Maps, а негативните — към скрит админ чат.' },
+    { icon: <IconNfcChip size={26} color="#a78bfa" />, title: 'NFC карти и QR табелки', text: 'Брандирани карти за сметкодържача и табелки за масата — гостът ги докосва с телефона, без приложение.' },
+    { icon: <IconVipWaiters size={26} color="#a78bfa" />, title: 'Оценка на всеки сервитьор', text: 'Звезди, отметки и коментари от гостите, на 5 езика, с класация на екипа в таблото.' },
+    { icon: <MessageSquare size={26} color="#a78bfa" />, title: 'Известия при 1–2★', text: 'Ниската оценка идва веднага в Telegram или по имейл — реагирате, докато гостът е още на масата.' },
+    { icon: <IconEuroChip size={26} color="#a78bfa" />, title: 'Бакшиш без посредник', text: 'Гостът плаща директно по сметката на сервитьора или заведението. Ние не държим пари и не взимаме комисиона.' },
+    { icon: <IconSmartRadar size={26} color="#a78bfa" />, title: 'Google отзиви', text: 'Доволните гости стигат до страницата ви за отзиви в Google с едно докосване.' },
+    { icon: <CheckCircle size={26} color="#a78bfa" />, title: 'Ваучери и седмичен отчет', text: 'Втори шанс за недоволния гост и кратко резюме на седмицата всеки понеделник.' },
   ];
 
   const benefits = [
-    { icon: <IconHandShieldStar size={30} color="#a78bfa" />, title: 'Защита на репутацията', text: 'Прихващате недоволството преди да стигне до Google и решавате проблема на момента.' },
+    { icon: <IconHandShieldStar size={30} color="#a78bfa" />, title: 'Защита на репутацията', text: 'Научавате за недоволния гост веднага и решавате проблема, докато той е още в заведението.' },
     { icon: <IconHandChart size={30} color="#a78bfa" />, title: 'Пълна прозрачност', text: 'Виждате в реално време как се представя всеки сервитьор и цялото заведение.' },
-    { icon: <IconHandTipCard size={30} color="#a78bfa" />, title: 'Мотивиран екип', text: 'По-високите бакшиши и справедливата бонус система задържат добрите служители.' },
+    { icon: <IconHandTipCard size={30} color="#a78bfa" />, title: 'Мотивиран екип', text: 'Бакшишът отива директно при сервитьора, а признанието от гостите задържа добрите служители.' },
   ];
 
   return (
@@ -134,7 +136,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigateToCustomizer }) 
             <h2 style={{ fontFamily: 'var(--font-official)', fontSize: '2rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>
               Предимства за вашия бизнес
             </h2>
-            <p style={{ color: 'var(--text-secondary)' }}>Защо стотици ресторантьори избират TipTap.</p>
+            <p style={{ color: 'var(--text-secondary)' }}>Какво печелите, когато всеки сервитьор има своя TipTap карта.</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.75rem' }}>

@@ -18,8 +18,8 @@ import {
   IconCyberQr, IconPrismStar, IconNfcChip,
   IconHandNfcCard, IconHandTableStand
 } from './CustomIcons';
-import { RemotionFeatureShowcase } from './RemotionFeatureShowcase';
-import { ModernFeatureGrid } from './ModernFeatureGrid';
+import { ProcessShowcase } from './ProcessShowcase';
+import { FeatureBento } from './FeatureBento';
 
 interface HowItWorksProps {
   onNavigateToCustomizer: () => void;
@@ -135,18 +135,23 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
 
       {/* SECTION 3: SYSTEM FEATURE GRID */}
       <section style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '0 2vw', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-        <div style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: '2.4rem', fontWeight: 900, fontFamily: 'var(--font-display)' }}>
-            4-те Основно Стъпки на Интелигентния Процес
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', maxWidth: '680px', margin: '0.4rem auto 0' }}>
-            Прегледайте как безконтактното докосване, оценката за сервитьора, Google Maps отзивите и бонус системата работят в синхрон.
+        <div className="section-head" style={{ marginBottom: 0 }}>
+          <span className="section-eyebrow">Процесът</span>
+          <h2 className="section-title">От докосване до решение — в четири стъпки</h2>
+          <p className="section-lead">
+            Какво се случва от момента, в който гостът докосне картата, до известието в телефона на управителя.
           </p>
         </div>
 
-        <RemotionFeatureShowcase />
+        <ProcessShowcase />
 
-        <ModernFeatureGrid />
+        <div className="section-head" style={{ margin: '2.5rem auto 0' }}>
+          <span className="section-eyebrow">Функции</span>
+          <h2 className="section-title">Всичко, което получавате</h2>
+          <p className="section-lead">Всяка функция е включена във всеки план и работи от първия ден.</p>
+        </div>
+
+        <FeatureBento />
       </section>
 
       {/* SECTION 3: BENEFICIAL FEATURES FOR MANAGERS VS WAITERS */}
@@ -179,32 +184,32 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
                   <CheckCircle2 color="var(--accent-purple)" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Автоматичен Ръст на Google 5★ Ревюта</strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Увеличете с до 300% положителните отзиви в Google Maps и класирайте заведението на челните места в града.</span>
+                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Повече отзиви в Google</strong>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Доволните гости стигат до страницата ви за отзиви с едно докосване — без да търсят заведението в Google Maps.</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
                   <CheckCircle2 color="var(--accent-purple)" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Щит Защита Срещу Негативни Оценки</strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Критичните отзиви остават скрити и се изпращат само до управителя, давайки ви възможност да реагирате веднага.</span>
+                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Известие при 1–2★ още в същата минута</strong>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Ниската оценка идва в Telegram или по имейл със сервитьора и коментара на госта, докато той е още в заведението.</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
                   <CheckCircle2 color="var(--accent-purple)" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Прозрачна Статистика за Всеки Сервитьор</strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Следете в реално време кой сервитьор има най-висок рейтинг, най-много сметки и най-доволни клиенти.</span>
+                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Ясна картина за всеки сервитьор</strong>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Сканирания, оценки, кликове за бакшиш и Google за всеки член на екипа, плюс седмичен отчет всеки понеделник.</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
                   <CheckCircle2 color="var(--accent-purple)" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Лесна Настройка на Бонус План</strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Задайте месечни цели за ревюта и рейтинги и възнаграждавайте най-добрите служители без субективност.</span>
+                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Ваучер вместо лош отзив</strong>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>По желание недоволният гост получава подарък за следващото посещение — вие решавате какъв и колко дни важи.</span>
                   </div>
                 </div>
               </div>
@@ -226,32 +231,32 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
                   <CheckCircle2 color="#f59e0b" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>+40% Повече Дигитални Бакшиши</strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Безконтактното плащане през Apple/Google Pay улеснява гостите без бройни пари да оставят по-голям бакшиш.</span>
+                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Бакшиш и без пари в брой</strong>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Гостите оставят бакшиш с телефона си — директно по сметката на сервитьора или на заведението.</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
                   <CheckCircle2 color="#f59e0b" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Лично Признание &amp; Комплименти</strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Сервитьорите виждат пердонализираните си звезди и похвали от клиентите, което изключително ги мотивира.</span>
+                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Лично признание</strong>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Сервитьорите виждат звездите и похвалите на гостите си — това мотивира повече от всяка заповед.</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
                   <CheckCircle2 color="#f59e0b" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>100% Честно &amp; Прозрачно Разпределение</strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Всеки бакшиш и ревю е свързано точно с личния профил/карта на сервитьора без грешки и съмнения.</span>
+                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Честна оценка</strong>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Всяка оценка е свързана с картата на конкретния сервитьор, а защитата от злоупотреби пази рейтинга от фалшиви оценки.</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
                   <CheckCircle2 color="#f59e0b" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Бързи Автоматични Изплащания</strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>В края на смяната или седмицата набраният бакшиш се превежда директно по сметката на сервитьора.</span>
+                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>Без посредник и без комисиона</strong>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Парите не минават през TipTap: гостът плаща през вашата страница (Revolut, myPOS, Stripe…), а в таблото виждате колко гости са отворили линка.</span>
                   </div>
                 </div>
               </div>

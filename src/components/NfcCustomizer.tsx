@@ -23,7 +23,7 @@ interface NfcCustomizerProps {
 
 export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) => {
   const [type, setType] = useState<'card' | 'stand' | 'both'>('card');
-  const [cardColor, setCardColor] = useState<'black' | 'white'>('black');
+  const [cardColor, setCardColor] = useState<'black' | 'white'>('white');
   const [quantity, setQuantity] = useState<number>(10);
   const [customText, setCustomText] = useState<string>('Име на заведение');
   const [logo, setLogo] = useState<string>('utensils');
@@ -64,18 +64,28 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
     }
   };
 
+  // White is the standard finish; black costs extra per card (stands are not affected)
+  const includesCard = type !== 'stand';
+  const blackSurchargeApplies = cardColor === 'black' && includesCard;
+
   const getPrice = () => {
     const cardPrice = 4.90;
     const standPrice = 6.90;
+    const blackSurcharge = blackSurchargeApplies ? 3.00 : 0.00;
     const customDesignSurcharge = logo === 'custom' ? 5.00 : 0.00;
 
     let baseUnitPrice = cardPrice;
     if (type === 'stand') baseUnitPrice = standPrice;
     if (type === 'both') baseUnitPrice = cardPrice + standPrice;
 
-    const finalUnitPrice = baseUnitPrice + customDesignSurcharge;
+    const finalUnitPrice = baseUnitPrice + blackSurcharge + customDesignSurcharge;
     return parseFloat((finalUnitPrice * quantity).toFixed(2));
   };
+
+  const priceExtras = [
+    blackSurchargeApplies && '+€3.00/бр. черно покритие',
+    logo === 'custom' && '+€5.00/бр. индивидуален дизайн',
+  ].filter(Boolean).join(' · ');
 
   const handleOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,7 +94,7 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
 
   const handleCheckoutSuccess = (orderDetails: any) => {
     setIsCheckoutModalOpen(false);
-    const newOrder = addOrder(cardColor, type, quantity, customText, logo);
+    const newOrder = addOrder(cardColor, type, quantity, customText, logo, getPrice());
     setOrderId(newOrder.id);
     setOrdered(true);
     setTimeout(() => {
@@ -544,22 +554,7 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
             <div style={{ display: 'flex', gap: '1rem' }}>
               <button
                 type="button"
-                style={{
-                  flex: 1,
-                  padding: '0.75rem',
-                  borderRadius: 'var(--radius-sm)',
-                  background: '#111',
-                  color: '#fff',
-                  border: cardColor === 'black' ? '2px solid var(--accent-purple)' : '1px solid var(--border-light)',
-                  cursor: 'pointer',
-                  fontWeight: 600
-                }}
-                onClick={() => setCardColor('black')}
-              >
-                Матово Черно
-              </button>
-              <button
-                type="button"
+                aria-pressed={cardColor === 'white'}
                 style={{
                   flex: 1,
                   padding: '0.75rem',
@@ -573,6 +568,23 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
                 onClick={() => setCardColor('white')}
               >
                 Матово Бяло
+              </button>
+              <button
+                type="button"
+                aria-pressed={cardColor === 'black'}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  borderRadius: 'var(--radius-sm)',
+                  background: '#111',
+                  color: '#fff',
+                  border: cardColor === 'black' ? '2px solid var(--accent-purple)' : '1px solid var(--border-light)',
+                  cursor: 'pointer',
+                  fontWeight: 600
+                }}
+                onClick={() => setCardColor('black')}
+              >
+                Матово Черно{includesCard && <span style={{ color: '#f59e0b', fontWeight: 700 }}> (+€3)</span>}
               </button>
             </div>
           </div>
@@ -660,7 +672,7 @@ export const NfcCustomizer: React.FC<NfcCustomizerProps> = ({ onOrderSuccess }) 
           }}>
             <div>
               <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block' }}>
-                Обща цена {logo === 'custom' && <span style={{ color: '#f59e0b', fontSize: '0.75rem' }}>(+€5.00/бр. индивидуален дизайн)</span>}
+                Обща цена {priceExtras && <span style={{ color: '#f59e0b', fontSize: '0.75rem' }}>({priceExtras})</span>}
               </span>
               <span style={{ fontSize: '1.75rem', fontWeight: 800 }} className="text-gradient-purple">
                 €{getPrice().toFixed(2)}

@@ -206,17 +206,20 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'terms' }) =>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr><td style={tdStyle}>NFC Карта (стандартен дизайн)</td><td style={tdStyle}>€4.90 / бр.</td></tr>
+                    <tr><td style={tdStyle}>NFC Карта (бяла, стандартен дизайн)</td><td style={tdStyle}>€4.90 / бр.</td></tr>
+                    <tr><td style={tdStyle}>Черно матово покритие на NFC картата</td><td style={tdStyle}>+€3.00 / бр.</td></tr>
                     <tr><td style={tdStyle}>Настолна Табелка</td><td style={tdStyle}>€6.90 / бр.</td></tr>
                     <tr><td style={tdStyle}>Комплект (Карта + Табелка)</td><td style={tdStyle}>€11.80 / бр.</td></tr>
-                    <tr><td style={tdStyle}>Дизайн по ваш избор (собствено лого)</td><td style={tdStyle}>+€5.00 еднократно</td></tr>
-                    <tr><td style={tdStyle}>Абонамент Start (месечно)</td><td style={tdStyle}>€19.99 / месец</td></tr>
-                    <tr><td style={tdStyle}>Абонамент Start (годишно)</td><td style={tdStyle}>€15.99 / месец</td></tr>
-                    <tr><td style={tdStyle}>Абонамент Premium (месечно)</td><td style={tdStyle}>€39.99 / месец</td></tr>
-                    <tr><td style={tdStyle}>Абонамент Premium (годишно)</td><td style={tdStyle}>€31.99 / месец</td></tr>
+                    <tr><td style={tdStyle}>Дизайн по ваш избор (собствено лого)</td><td style={tdStyle}>+€5.00 / бр.</td></tr>
+                    <tr><td style={tdStyle}>Абонамент „Старт“ (месечно плащане)</td><td style={tdStyle}>€19.99 / месец</td></tr>
+                    <tr><td style={tdStyle}>Абонамент „Старт“ (годишно плащане)</td><td style={tdStyle}>€15.99 / месец</td></tr>
+                    <tr><td style={tdStyle}>Абонамент „Премиум“ (месечно плащане)</td><td style={tdStyle}>€39.99 / месец</td></tr>
+                    <tr><td style={tdStyle}>Абонамент „Премиум“ (годишно плащане)</td><td style={tdStyle}>€31.99 / месец</td></tr>
                   </tbody>
                 </table>
-                <p style={pStyle}>Приетите методи за плащане са: банкова карта (Visa, Mastercard), Apple Pay, Google Pay и банков превод. Плащането се обработва чрез сертифициран платежен доставчик (Stripe). TipTap не съхранява данни за банкови карти.</p>
+                <p style={pStyle}>Поръчките на NFC продукти и абонаментите се заплащат по банков път срещу издадена фактура. TipTap не съхранява данни за банкови карти.</p>
+                <h3 style={{ ...h2Style, fontSize: '1.05rem', marginTop: '1.25rem' }}>Бакшиши</h3>
+                <p style={pStyle}>TipTap не приема, не съхранява и не превежда плащания на бакшиши и не взима комисиона от тях. Бутонът за бакшиш пренасочва госта към страница за плащане, посочена от заведението или от сервитьора (например Revolut, myPOS или Stripe). Плащането е отношение само между госта и получателя; Доставчикът не е страна по него. Данъчното и счетоводното отчитане на бакшишите е задължение на заведението и на получателя.</p>
               </div>
 
               <div style={sectionStyle}>
@@ -309,6 +312,12 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'terms' }) =>
                       <td style={tdStyle}>Чл. 6, § 1, б. "е" – легитимен интерес</td>
                     </tr>
                     <tr>
+                      <td style={tdStyle}>Данни от оценката на госта</td>
+                      <td style={tdStyle}>Оценка, отметки, коментар, език; анонимен хеш на устройството и IP адреса</td>
+                      <td style={tdStyle}>Обратна връзка към заведението; защита от спам и злоупотреби</td>
+                      <td style={tdStyle}>Чл. 6, § 1, б. "е" – легитимен интерес</td>
+                    </tr>
+                    <tr>
                       <td style={tdStyle}>Маркетингови данни</td>
                       <td style={tdStyle}>Имейл за newsletter</td>
                       <td style={tdStyle}>Изпращане на промоционални съобщения</td>
@@ -356,9 +365,11 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'terms' }) =>
                 <h2 style={h2Style}>5. Предаване на данни на трети страни</h2>
                 <p style={pStyle}>Данните ви могат да бъдат предадени на следните категории получатели:</p>
                 <ul style={ulStyle}>
-                  <li><strong style={{ color: '#fff' }}>Stripe Inc.</strong> – за обработка на плащания (сертифициран по PCI DSS).</li>
+                  <li><strong style={{ color: '#fff' }}>Supabase Inc.</strong> – хостинг на базата данни и вход в профила (сървъри в ЕС).</li>
+                  <li><strong style={{ color: '#fff' }}>Cloudflare Inc.</strong> – невидима защита от спам (Turnstile) на страницата за оценка.</li>
+                  <li><strong style={{ color: '#fff' }}>Resend Inc. и Telegram</strong> – доставка на известия и седмични отчети до заведението, ако то ги е включило.</li>
                   <li><strong style={{ color: '#fff' }}>Куриерски компании</strong> (Еконт, Спиди) – само адрес за доставка.</li>
-                  <li><strong style={{ color: '#fff' }}>Google LLC</strong> – Google Analytics (с анонимизирани IP адреси).</li>
+                  <li><strong style={{ color: '#fff' }}>Google LLC</strong> – уеб шрифтове (Google Fonts) и пренасочване към Google отзиви по избор на госта.</li>
                   <li><strong style={{ color: '#fff' }}>Държавни органи</strong> – при законово изискване.</li>
                 </ul>
                 <p style={pStyle}>Не продаваме и не споделяме данните ви с рекламни мрежи.</p>
